@@ -72,7 +72,9 @@ protected:
 
 /*
     MinHeap Abstract Class
+ 
     T: the Data type. NodeType: Node(Container) used for implementation
+ 
     Insert(),Extract(): Worst Case - O(lg n)
  */
 
@@ -168,25 +170,47 @@ protected:
 };
 
 
+/*
+    Abstract Tree Class
+ 
+    *Root is the Root Node of NodeType Class
+ 
+    Insert: O(lg n) - Average
+            O(n) - Worst Case
+    Delete: O(lg n) - Average
+            O(n) - Worst Case
+    Reset:  O(n) - Average & Worst Case
+ */
+
+
 template<class Comparable,class NodeType> class ABCtree{
 public:
     
-    /* Insert Function Should*/
-    virtual void Insert(NodeType *NewNode);
+    /* Basic Functions */
+    void Insert(Comparable *Key);
     void Delete(Comparable *Key);
     void Reset();
+    
+    /* Useful for Debugging */
     void PrintInOrder();
     void PrintGraph();
     
 protected:
     
+    /* Overloaded Functions using Tree Traversal */
     void Reset(NodeType *Root);
     void PrintInOrder(NodeType *Root);
     void PrintGraph(NodeType *Root);
+    
+    /*  */
     NodeType *Smallest(NodeType *Root);
     NodeType *Search(Comparable *Key);
     bool isLeftChild(NodeType *Root);
+    
+    /* To be Defined in Derived Classes */
     virtual void Swap(NodeType *Node1, NodeType *Node2)=0;
+    
+    /* Node Accessors, To be Defined in Derived Classes */
     virtual Comparable *GetNodeKey(NodeType *Node)=0;
     virtual NodeType *GetLeftChild(NodeType *Node)=0;
     virtual void SetLeftChild(NodeType *Node,NodeType *Child)=0;
@@ -198,13 +222,20 @@ protected:
     NodeType *Root;
 };
 
+/*
+    Binary Search Tree
+    Node has a Comparable Object and 3 Pointers(Parent, Left Child, Right Child)
+ */
+
 template<class Comparable> class Tree: public ABCtree<Comparable, TreeNodeWParent<Comparable>>{
 public:
+    
     Tree(){this->Root=NULL;}
     ~Tree(){this->Reset();}
-    void Insert(Comparable *Key);
-    void Swap(TreeNodeWParent<Comparable> *Node1,TreeNodeWParent<Comparable> *Node2);
+    
 protected:
+    
+    void Swap(TreeNodeWParent<Comparable> *Node1,TreeNodeWParent<Comparable> *Node2);
     Comparable *GetNodeKey(TreeNodeWParent<Comparable> *Node);
     TreeNodeWParent<Comparable> *GetLeftChild(TreeNodeWParent<Comparable> *Node);
     void SetLeftChild(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Child);
@@ -213,5 +244,6 @@ protected:
     TreeNodeWParent<Comparable> *GetParent(TreeNodeWParent<Comparable> *Node);
     void SetParent(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Parent);
 };
+
 #include "adt.cpp"
 #endif /* ADT_H */

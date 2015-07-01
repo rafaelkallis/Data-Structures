@@ -53,6 +53,7 @@ public:
 	TreeNode *Left,*Right;
 };
 
+/* Used by Binary Search Tree */
 template<class Comparable> class TreeNodeWParent{
 public:
 	TreeNodeWParent(Comparable *Key,TreeNodeWParent *Left,TreeNodeWParent *Right,TreeNodeWParent *Parent)
@@ -74,6 +75,7 @@ template<class Comparable,class T> class TreeMapNode{
     TreeMapNode *Left,*Right;
 };
 
+/* Used by Binary Search Tree Map(Dictionary) */
 template<class Comparable,class T> class TreeMapNodeWParent{
     TreeMapNodeWParent(Comparable *Key,T *Data,TreeMapNodeWParent *Left,TreeMapNodeWParent *Right,TreeMapNodeWParent *Parent)
     :Key(Key),Data(Data),Left(Left),Right(Right),Parent(Parent){}

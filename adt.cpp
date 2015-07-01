@@ -49,19 +49,19 @@ template<class T>int Queue<T>::Size(){
 }
 
 /*
- MinHeap Abstract Class
- T: the Data type. NodeType: Node used for implementation
+    MinHeap Abstract Class
+    T: the Data type. NodeType: Node used for implementation
 */
 
 
 /*
- ABCHeap<T,NodeType>::Insert() 
- Should be included in all Derived Insert() Functions
+    ABCHeap<T,NodeType>::Insert()
+    Should be included in all Derived Insert() Functions
 */
 
 template<class Comparable,class NodeType>
 void ABCHeap<Comparable,NodeType>::Insert(){
-    // ArrayList Insertion functions in Derived classes should be called here
+    /* ArrayList Insertion functions in Derived classes should be called here */
     Perc_Up(this->Data->Size()-1);
 }
 
@@ -94,7 +94,7 @@ void ABCHeap<Comparable,NodeType>::Perc_Down(int index){
 }
 
 /*
- SimpleHeap
+    SimpleHeap
  */
 
 template<class Comparable>void SimpleHeap<Comparable>::Insert(Comparable *Data){
@@ -109,7 +109,7 @@ template<class Comparable> Comparable* SimpleHeap<Comparable>::Extract(){
 }
 
 /*
- PriorityQueue
+    PriorityQueue
  */
 
 template<class T> void PriorityQueue<T>::Insert(int* priority, T* Data){
@@ -128,7 +128,8 @@ template<class T> T* PriorityQueue<T>::Extract(){
  */
 
 template<class Comparable,class NodeType>
-void ABCtree<Comparable,NodeType>::Insert(NodeType *NewNode){
+void ABCtree<Comparable,NodeType>::Insert(Comparable *Key){
+    NodeType *NewNode=new NodeType(Key);
     if(!this->Root)this->Root=NewNode;
     else{
         NodeType *Temp,*Follow;Temp=Follow=this->Root;
@@ -199,7 +200,7 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
             if(GetRightChild(Temp))
                 SetParent(GetRightChild(Temp),GetParent(Temp));
         }else{
-            /* Node has 2 Children, is a Left Child */
+        /* Node has 2 Children, is a Left Child */
             SetLeftChild(GetParent(Temp), GetRightChild(Temp));
             if(GetRightChild(Temp))
                 SetParent(GetRightChild(Temp), GetParent(Temp));
@@ -287,11 +288,6 @@ bool ABCtree<Comparable,NodeType>::isLeftChild(NodeType *Root){
  
  Tree with basic Node structure containing a Comparable Key
  */
-
-template<class Comparable> void Tree<Comparable>::Insert(Comparable *Key){
-    ABCtree<Comparable, TreeNodeWParent<Comparable>>::
-    Insert(new TreeNodeWParent<Comparable>(Key,NULL,NULL,NULL));
-}
 
 template<class Comparable> void Tree<Comparable>::
 Swap(TreeNodeWParent<Comparable> *Node1,TreeNodeWParent<Comparable> *Node2){

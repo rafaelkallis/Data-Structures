@@ -43,32 +43,45 @@ public:
 };
 
 
-template<class T> class TreeNode{
+template<class Comparable> class TreeNode{
 public:
-	TreeNode(T *Key,TreeNode *Left,TreeNode *Right)
+	TreeNode(Comparable *Key,TreeNode *Left,TreeNode *Right)
 		:Key(Key),Left(Left),Right(Right){}
 	~TreeNode(){Left=Right=NULL,delete Key;}
 	
-	T *Key;
+	Comparable *Key;
 	TreeNode *Left,*Right;
 };
 
-template<class T> class TreeNodeWParent{
+template<class Comparable> class TreeNodeWParent{
 public:
-	TreeNodeWParent(T *Key,TreeNodeWParent *Left,TreeNodeWParent *Right,TreeNodeWParent *Parent)
+	TreeNodeWParent(Comparable *Key,TreeNodeWParent *Left,TreeNodeWParent *Right,TreeNodeWParent *Parent)
 		:Key(Key),Left(Left),Right(Right),Parent(Parent){}
+    TreeNodeWParent(Comparable *Key):Key(Key){Left=Right=Parent=NULL;}
 	~TreeNodeWParent(){delete Key,Left=Right=Parent=NULL;}
 	
-	T *Key;
+	Comparable *Key;
 	TreeNodeWParent *Left,*Right,*Parent;
 };
 
 template<class Comparable,class T> class TreeMapNode{
+    TreeMapNode(Comparable *Key,T *Data,TreeMapNode *Left,TreeMapNode *Right)
+    :Key(Key),Data(Data),Left(Left),Right(Right){}
+    ~TreeMapNode(){Left=Right=NULL,delete Key;delete Data;}
     
+    Comparable *Key;
+    T *Data;
+    TreeMapNode *Left,*Right;
 };
 
 template<class Comparable,class T> class TreeMapNodeWParent{
+    TreeMapNodeWParent(Comparable *Key,T *Data,TreeMapNodeWParent *Left,TreeMapNodeWParent *Right,TreeMapNodeWParent *Parent)
+    :Key(Key),Data(Data),Left(Left),Right(Right),Parent(Parent){}
+    ~TreeMapNodeWParent(){delete Key,Left=Right=Parent=NULL;}
     
+    Comparable *Key;
+    T *Data;
+    TreeMapNodeWParent *Left,*Right,*Parent;
 };
 
 #include "nodes.cpp"

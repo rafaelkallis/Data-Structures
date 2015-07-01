@@ -76,18 +76,18 @@ protected:
     Insert(),Extract(): Worst Case - O(lg n)
  */
 
-template<class T,class NodeType> class ABCHeap{
+template<class Comparable,class NodeType> class ABCHeap{
 public:
     
     /* 
-     Adds a Node(Container) of Object (of class T) into Heap.
+     Adds a Node(Container) of Object (of class Comparable) into Heap.
      Must be Overloaded in derived class.
      See adt.cpp for Details
      */
     virtual void Insert();
     
     /*
-     Returns Object (of Class T) without the Container.
+     Returns Object (of class Comparable) without the Container.
      Must be Overloaded in derived class.
      See adt.cpp for Details
      */
@@ -102,7 +102,7 @@ protected:
     ArrayList<NodeType> *Data;
     
     /* Returns Key of Node, depending on use this is used different. */
-    virtual T* GetNodeKey(int index)=0;
+    virtual Comparable* GetNodeKey(int index)=0;
     
     /* Functions used by Insert() and Extract() */
     void Swap(int i, int j);
@@ -118,19 +118,19 @@ protected:
     Uses GenericNode<T>, a simple Node containing only a T* pointer.
 */
 
-template<class T> class SimpleHeap: public ABCHeap<T,GenericNode<T>>{
+template<class Comparable> class SimpleHeap: public ABCHeap<Comparable,GenericNode<Comparable>>{
 public:
     
-    SimpleHeap(){ABCHeap<T,GenericNode<T>>::Data=new ArrayList<GenericNode<T>>;}
-    ~SimpleHeap(){delete ABCHeap<T,GenericNode<T>>::Data;}
+    SimpleHeap(){ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList<GenericNode<Comparable>>;}
+    ~SimpleHeap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
     
-    void Insert(T *Data);
-    T* Extract();
+    void Insert(Comparable *Data);
+    Comparable* Extract();
     
 protected:
     
-    T* GetNodeKey(int index){
-        return ABCHeap<T,GenericNode<T>>::Data->Get(index)->key;}
+    Comparable* GetNodeKey(int index){
+        return ABCHeap<Comparable,GenericNode<Comparable>>::Data->Get(index)->key;}
 };
 
 /*
@@ -167,5 +167,51 @@ protected:
     
 };
 
+
+template<class Comparable,class NodeType> class ABCtree{
+public:
+    
+    /* Insert Function Should*/
+    virtual void Insert(NodeType *NewNode);
+    void Delete(Comparable *Key);
+    void Reset();
+    void PrintInOrder();
+    void PrintGraph();
+    
+protected:
+    
+    void Reset(NodeType *Root);
+    void PrintInOrder(NodeType *Root);
+    void PrintGraph(NodeType *Root);
+    NodeType *Smallest(NodeType *Root);
+    NodeType *Search(Comparable *Key);
+    bool isLeftChild(NodeType *Root);
+    virtual void Swap(NodeType *Node1, NodeType *Node2)=0;
+    virtual Comparable *GetNodeKey(NodeType *Node)=0;
+    virtual NodeType *GetLeftChild(NodeType *Node)=0;
+    virtual void SetLeftChild(NodeType *Node,NodeType *Child)=0;
+    virtual NodeType *GetRightChild(NodeType *Node)=0;
+    virtual void SetRightChild(NodeType *Node,NodeType *Child)=0;
+    virtual NodeType *GetParent(NodeType *Node)=0;
+    virtual void SetParent(NodeType *Node,NodeType *Parent)=0;
+    
+    NodeType *Root;
+};
+
+template<class Comparable> class Tree: public ABCtree<Comparable, TreeNodeWParent<Comparable>>{
+public:
+    Tree(){this->Root=NULL;}
+    ~Tree(){this->Reset();}
+    void Insert(Comparable *Key);
+    void Swap(TreeNodeWParent<Comparable> *Node1,TreeNodeWParent<Comparable> *Node2);
+protected:
+    Comparable *GetNodeKey(TreeNodeWParent<Comparable> *Node);
+    TreeNodeWParent<Comparable> *GetLeftChild(TreeNodeWParent<Comparable> *Node);
+    void SetLeftChild(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Child);
+    TreeNodeWParent<Comparable> *GetRightChild(TreeNodeWParent<Comparable> *Node);
+    void SetRightChild(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Child);
+    TreeNodeWParent<Comparable> *GetParent(TreeNodeWParent<Comparable> *Node);
+    void SetParent(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Parent);
+};
 #include "adt.cpp"
 #endif /* ADT_H */

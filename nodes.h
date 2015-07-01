@@ -42,46 +42,33 @@ public:
 	GenericSingleListNode<T> *Next;
 };
 
-class TreeNode{
+
+template<class T> class TreeNode{
 public:
-	TreeNode(int key,TreeNode *Left,TreeNode *Right)
-		:key(key),Left(Left),Right(Right){}
-	~TreeNode(){Left=Right=NULL;}
+	TreeNode(T *Key,TreeNode *Left,TreeNode *Right)
+		:Key(Key),Left(Left),Right(Right){}
+	~TreeNode(){Left=Right=NULL,delete Key;}
 	
-	int key;
+	T *Key;
 	TreeNode *Left,*Right;
 };
 
-class TreeNodeParent{
+template<class T> class TreeNodeWParent{
 public:
-	TreeNodeParent(int key,TreeNodeParent *Left,TreeNodeParent *Right,TreeNodeParent *Parent)
-		:key(key),Left(Left),Right(Right),Parent(Parent){}
-	~TreeNodeParent(){Left=Right=Parent=NULL;}
+	TreeNodeWParent(T *Key,TreeNodeWParent *Left,TreeNodeWParent *Right,TreeNodeWParent *Parent)
+		:Key(Key),Left(Left),Right(Right),Parent(Parent){}
+	~TreeNodeWParent(){delete Key,Left=Right=Parent=NULL;}
 	
-	int key;
-	TreeNodeParent *Left,*Right,*Parent;
+	T *Key;
+	TreeNodeWParent *Left,*Right,*Parent;
 };
 
-template<class T> class DataTreeNode{
-public:
-	DataTreeNode(int key, T *Data,DataTreeNode *Left,DataTreeNode *Right)
-		:key(key),Data(Data),Left(Left),Right(Right){}
-	~DataTreeNode(){Data=Left=Right=NULL;}
-	
-	T *Data;
-	int key;
-	DataTreeNode *Left,*Right;
+template<class Comparable,class T> class TreeMapNode{
+    
 };
 
-template<class T> class DataTreeNodeParent{
-public:
-	DataTreeNodeParent(int key, T *Data,DataTreeNodeParent *Left,DataTreeNodeParent *Right,DataTreeNodeParent *Parent)
-		:key(key),Data(Data),Left(Left),Right(Right),Parent(Parent){}
-	~DataTreeNodeParent(){Data=Left=Right=Parent=NULL;}
-	
-	T *Data;
-	int key;
-	DataTreeNodeParent *Left,*Right,*Parent;
+template<class Comparable,class T> class TreeMapNodeWParent{
+    
 };
 
 #include "nodes.cpp"

@@ -8,5 +8,6 @@ Structures Included:
 	->Queue
 	->Heap
 	->Priority Queue
+	->Tree (BST)
 	->Dynamic Array (Similar to Java's ArrayList, uses amortized dynamic memory allocation based on size)
 	->List of Nodes and Containers used in different data structures

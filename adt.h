@@ -81,6 +81,8 @@ protected:
 template<class Comparable,class NodeType> class ABCHeap{
 public:
     
+    virtual ~ABCHeap(){}
+    
     /* 
      Adds a Node(Container) of Object (of class Comparable) into Heap.
      Must be Overloaded in derived class.
@@ -101,7 +103,7 @@ protected:
      ArrayList is a self-expanding and collapsing dynamic array.
      ArrayList can be found in arrays.h
      */
-    ArrayList<NodeType> *Data;
+    ArrayList_Ext<NodeType> *Data;
     
     /* Returns Key of Node, depending on use this is used different. */
     virtual Comparable* GetNodeKey(int index)=0;
@@ -123,7 +125,7 @@ protected:
 template<class Comparable> class SimpleHeap: public ABCHeap<Comparable,GenericNode<Comparable>>{
 public:
     
-    SimpleHeap(){ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList<GenericNode<Comparable>>;}
+    SimpleHeap(){ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList_Ext<GenericNode<Comparable>>;}
     ~SimpleHeap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
     
     void Insert(Comparable *Data);
@@ -147,9 +149,9 @@ template<class T> class PriorityQueue:public ABCHeap<int,DoubleGenericNode<int, 
 public:
     
     PriorityQueue(){
-        ABCHeap<int,DoubleGenericNode<int,T>>::Data=new ArrayList<DoubleGenericNode<int,T>>();
+        ABCHeap<int,DoubleGenericNode<int,T>>::Data=new ArrayList_Ext<DoubleGenericNode<int,T>>();
     }
-    ~PriorityQueue(){delete this->Data;}
+    ~PriorityQueue(){delete this->Data;this->Data=NULL;}
 
     /*
      Pretty straight-forward, Inserts a Node with Data and the Data's priority.
@@ -186,6 +188,8 @@ protected:
 
 template<class Comparable,class NodeType> class ABCtree{
 public:
+    
+    virtual ~ABCtree(){}
     
     /* Basic Functions, can be Overloaded in Derived Classes */
     void                Insert(Comparable *Key);

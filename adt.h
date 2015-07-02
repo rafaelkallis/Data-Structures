@@ -28,10 +28,10 @@ public:
     Stack(){Head=NULL,size=0;}
 	~Stack(){try{ while(1)Pop();}catch(EmptyADTException e){ Head=NULL;}}
 	
-	T Top();
-	void Pop();
-	void Push(T key);
-	int Size();
+	T*      Top();
+	void    Pop();
+	void    Push(T *Key);
+	int     Size();
 	
 protected:
     /*
@@ -41,7 +41,7 @@ protected:
      GenericSingleListNode<T> definition found in nodes.h
      */
 	GenericSingleListNode<T> *Head;
-	int size;	
+	int     size;
 };
 
 /*
@@ -55,10 +55,10 @@ public:
     Queue(){Head=Tail=NULL,size=0;}
     ~Queue(){try{ while(1)Pop();}catch(EmptyADTException e){ Head=NULL;}}
     
-    T Top();
-    void Pop();
-    void Push(T key);
-    int Size();
+    T*      Top();
+    void    Pop();
+    void    Push(T *Key);
+    int     Size();
 protected:
     /*
         GenericSingleListNode is a Node consisting of:
@@ -67,7 +67,7 @@ protected:
         GenericSingleListNode<T> definition found in nodes.h
      */
     GenericSingleListNode<T> *Head,*Tail;
-    int size;
+    int     size;
 };
 
 /*
@@ -86,14 +86,14 @@ public:
      Must be Overloaded in derived class.
      See adt.cpp for Details
      */
-    virtual void Insert();
+    virtual void        Insert();
     
     /*
      Returns Object (of class Comparable) without the Container.
      Must be Overloaded in derived class.
      See adt.cpp for Details
      */
-    void Extract();
+    void                Extract();
 
 protected:
     /*
@@ -107,12 +107,12 @@ protected:
     virtual Comparable* GetNodeKey(int index)=0;
     
     /* Functions used by Insert() and Extract() */
-    void Swap(int i, int j);
-    void Perc_Up(int index);
-    void Perc_Down(int index);
-    int Left(int index){return (2*index)+1;}
-    int Right(int index){return (2*index)+2;}
-    int Parent(int index){return (index-1)/2;}
+    void                Swap(int i, int j);
+    void                Perc_Up(int index);
+    void                Perc_Down(int index);
+    int                 Left(int index){return (2*index)+1;}
+    int                 Right(int index){return (2*index)+2;}
+    int                 Parent(int index){return (index-1)/2;}
 };
 
 /*
@@ -132,7 +132,8 @@ public:
 protected:
     
     Comparable* GetNodeKey(int index){
-        return ABCHeap<Comparable,GenericNode<Comparable>>::Data->Get(index)->key;}
+        return ABCHeap<Comparable,GenericNode<Comparable>>::Data->Get(index)->key;
+	}
 };
 
 /*
@@ -148,7 +149,7 @@ public:
     PriorityQueue(){
         ABCHeap<int,DoubleGenericNode<int,T>>::Data=new ArrayList<DoubleGenericNode<int,T>>();
     }
-    ~PriorityQueue(){delete ABCHeap<int,DoubleGenericNode<int,T>>::Data;}
+    ~PriorityQueue(){delete this->Data;}
 
     /*
      Pretty straight-forward, Inserts a Node with Data and the Data's priority.
@@ -156,15 +157,15 @@ public:
      Insert(new int(3),new char('R'));
      => Inserts a new node of char value 'R' and priority 3. <=
      */
-    void Insert(int* priority, T* Data);
+    void    Insert(int* priority, T* Data);
     
     /* Returns the Object with smallest Priority. */
-    T* Extract();
+    T*      Extract();
     
 protected:
     
     /* Returns key1 used for priority comparison */
-    int* GetNodeKey(int index){
+    int*    GetNodeKey(int index){
         return ABCHeap<int,DoubleGenericNode<int, T>>::Data->Get(index)->key1;}
     
 };
@@ -186,38 +187,40 @@ protected:
 template<class Comparable,class NodeType> class ABCtree{
 public:
     
-    /* Basic Functions */
-    void Insert(Comparable *Key);
-    void Delete(Comparable *Key);
-    void Reset();
+    /* Basic Functions, can be Overloaded in Derived Classes */
+    void                Insert(Comparable *Key);
+    void                Delete(Comparable *Key);
+    void                Reset();
     
     /* Useful for Debugging */
-    void PrintInOrder();
-    void PrintGraph();
+    void                PrintInOrder();
+    void                PrintGraph();
     
 protected:
     
+    /* Can be Overloaded be Derived Classes */
+    void                Insert(NodeType *Node);
     /* Overloaded Functions using Tree Traversal */
-    void Reset(NodeType *Root);
-    void PrintInOrder(NodeType *Root);
-    void PrintGraph(NodeType *Root);
+    void                Reset(NodeType *Root);
+    void                PrintInOrder(NodeType *Root);
+    void                PrintGraph(NodeType *Root);
     
     /*  */
-    NodeType *Smallest(NodeType *Root);
-    NodeType *Search(Comparable *Key);
-    bool isLeftChild(NodeType *Root);
+    NodeType*           Smallest(NodeType *Root);
+    NodeType*           Search(Comparable *Key);
+    bool                isLeftChild(NodeType *Root);
     
     /* To be Defined in Derived Classes */
-    virtual void Swap(NodeType *Node1, NodeType *Node2)=0;
+    virtual void        Swap(NodeType *Node1, NodeType *Node2)=0;
     
     /* Node Accessors, To be Defined in Derived Classes */
-    virtual Comparable *GetNodeKey(NodeType *Node)=0;
-    virtual NodeType *GetLeftChild(NodeType *Node)=0;
-    virtual void SetLeftChild(NodeType *Node,NodeType *Child)=0;
-    virtual NodeType *GetRightChild(NodeType *Node)=0;
-    virtual void SetRightChild(NodeType *Node,NodeType *Child)=0;
-    virtual NodeType *GetParent(NodeType *Node)=0;
-    virtual void SetParent(NodeType *Node,NodeType *Parent)=0;
+    virtual             Comparable *GetNodeKey(NodeType *Node)=0;
+    virtual NodeType*   GetLeftChild(NodeType *Node)=0;
+    virtual void        SetLeftChild(NodeType *Node,NodeType *Child)=0;
+    virtual NodeType*   GetRightChild(NodeType *Node)=0;
+    virtual void        SetRightChild(NodeType *Node,NodeType *Child)=0;
+    virtual NodeType*   GetParent(NodeType *Node)=0;
+    virtual void        SetParent(NodeType *Node,NodeType *Parent)=0;
     
     NodeType *Root;
 };
@@ -243,6 +246,38 @@ protected:
     void SetRightChild(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Child);
     TreeNodeWParent<Comparable> *GetParent(TreeNodeWParent<Comparable> *Node);
     void SetParent(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Parent);
+};
+
+/*
+    Binary Search Tree Map(Dictionary)
+    Links Keys with Data.
+ */
+
+template<class Comparable,class T> class TreeMap: public ABCtree<Comparable, TreeMapNodeWParent<Comparable, T>>{
+public:
+    
+    TreeMap(){this->Root=NULL;}
+    ~TreeMap(){this->Reset();}
+    
+    /* Input Key with Linked Data */
+    void    Insert(Comparable *Key, T *Data);
+    
+    /* Maps to the Linked Data of Selected Key */
+    T*       Extract(Comparable *Key);
+    
+    /* Overrides Selected Key's Data with new Data */
+    void    Edit(Comparable *Key, T *Data);
+    
+protected:
+    
+    void Swap(TreeMapNodeWParent<Comparable, T> *Node1,TreeMapNodeWParent<Comparable, T> *Node2);
+    Comparable *GetNodeKey(TreeMapNodeWParent<Comparable, T> *Node);
+    TreeMapNodeWParent<Comparable, T> *GetLeftChild(TreeMapNodeWParent<Comparable, T> *Node);
+    void SetLeftChild(TreeMapNodeWParent<Comparable, T> *Node,TreeMapNodeWParent<Comparable, T> *Child);
+    TreeMapNodeWParent<Comparable, T> *GetRightChild(TreeMapNodeWParent<Comparable, T> *Node);
+    void SetRightChild(TreeMapNodeWParent<Comparable, T> *Node,TreeMapNodeWParent<Comparable, T> *Child);
+    TreeMapNodeWParent<Comparable, T> *GetParent(TreeMapNodeWParent<Comparable, T> *Node);
+    void SetParent(TreeMapNodeWParent<Comparable, T> *Node,TreeMapNodeWParent<Comparable, T> *Parent);
 };
 
 #include "adt.cpp"

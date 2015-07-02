@@ -6,9 +6,9 @@
 #include "adt.h"
 #include <iostream>
 
-template<class T> T Stack<T>::Top(){
+template<class T> T* Stack<T>::Top(){
     if(!Head)throw EmptyADTException();
-    return Head->key;
+    return Head->Key;
 }
 
 template<class T> void Stack<T>::Pop(){
@@ -18,15 +18,15 @@ template<class T> void Stack<T>::Pop(){
     delete toDelete;
 }
 
-template<class T> void Stack<T>::Push(T key){
-    Head=new GenericSingleListNode<T>(key,Head);size++;
+template<class T> void Stack<T>::Push(T *Key){
+    Head=new GenericSingleListNode<T>(Key,Head);size++;
 }
 
 template<class T>int Stack<T>::Size(){
     return size;
 }
 
-template<class T> T Queue<T>::Top(){
+template<class T> T* Queue<T>::Top(){
     if(!Head)throw EmptyADTException();
     return Head->key;
 }
@@ -34,13 +34,15 @@ template<class T> T Queue<T>::Top(){
 template<class T> void Queue<T>::Pop(){
     if(!Head)throw EmptyADTException();
     GenericSingleListNode<T> *toDelete=Head;
-    Head=Head->Next,size--;
+    Head=Head->Next;
+    size--;
     delete toDelete;
+    if(!Head)Tail=NULL;
 }
 
-template<class T> void Queue<T>::Push(T key){
-    if(!Head)Head=Tail=new GenericSingleListNode<T>(key,NULL);
-    else Tail->Next=new GenericSingleListNode<T>(key,NULL),Tail=Tail->Next;
+template<class T> void Queue<T>::Push(T *Key){
+    if(!Head)Head=Tail=new GenericSingleListNode<T>(Key,NULL);
+    else Tail->Next=new GenericSingleListNode<T>(Key,NULL),Tail=Tail->Next;
     size++;
 }
 
@@ -129,21 +131,7 @@ template<class T> T* PriorityQueue<T>::Extract(){
 
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::Insert(Comparable *Key){
-    NodeType *NewNode=new NodeType(Key);
-    if(!this->Root)this->Root=NewNode;
-    else{
-        NodeType *Temp,*Follow;Temp=Follow=this->Root;
-        while(Temp){
-            Follow=Temp;
-            if(*GetNodeKey(NewNode) < *GetNodeKey(Temp))Temp=GetLeftChild(Temp);
-            else Temp=GetRightChild(Temp);
-        }
-        if(*GetNodeKey(NewNode) < *GetNodeKey(Follow))
-            SetLeftChild(Follow,NewNode);
-        else SetRightChild(Follow,NewNode);
-        SetParent(NewNode, Follow);
-    }
-    
+    Insert(new NodeType(Key));
 }
 
 template<class Comparable,class NodeType>
@@ -226,6 +214,23 @@ void ABCtree<Comparable,NodeType>::PrintInOrder(){
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::PrintGraph(){
     this->PrintGraph(Root);
+}
+
+template<class Comparable,class NodeType>
+void ABCtree<Comparable,NodeType>::Insert(NodeType *Node){
+    if(!this->Root)this->Root=Node;
+    else{
+        NodeType *Temp,*Follow;Temp=Follow=this->Root;
+        while(Temp){
+            Follow=Temp;
+            if(*GetNodeKey(Node) < *GetNodeKey(Temp))Temp=GetLeftChild(Temp);
+            else Temp=GetRightChild(Temp);
+        }
+        if(*GetNodeKey(Node) < *GetNodeKey(Follow))
+            SetLeftChild(Follow,Node);
+        else SetRightChild(Follow,Node);
+        SetParent(Node, Follow);
+    }
 }
 
 template<class Comparable,class NodeType>
@@ -334,6 +339,79 @@ GetParent(TreeNodeWParent<Comparable> *Node){
 
 template<class Comparable> void Tree<Comparable>::
 SetParent(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Parent){
+    if(!Node)throw UncaughtException();
+    Node->Parent=Parent;
+}
+
+/*
+    Binary Search Tree Map(Dictionary)
+ */
+
+template<class Comparable,class T>
+void TreeMap<Comparable,T>::Insert(Comparable *Key, T *Data){
+    ABCtree<Comparable, TreeMapNodeWParent<Comparable, T>>::Insert(new TreeMapNodeWParent<Comparable, T>(Key,Data));
+}
+
+template<class Comparable,class T>
+T* TreeMap<Comparable, T>::Extract(Comparable *Key){
+    TreeMapNodeWParent<Comparable, T> *Temp=ABCtree<Comparable, TreeMapNodeWParent<Comparable, T>>::Search(Key);
+    if(!Temp) return NULL;
+    else return Temp->Data;
+}
+
+template<class Comparable,class T>
+void TreeMap<Comparable, T>::Edit(Comparable *Key, T *Data){
+    TreeMapNodeWParent<Comparable, T> *Temp=ABCtree<Comparable, TreeMapNodeWParent<Comparable, T>>::Search(Key);
+    if(!Temp) return;
+    else Temp->Data=Data;
+}
+
+template<class Comparable,class T>
+void TreeMap<Comparable,T>::Swap(TreeMapNodeWParent<Comparable, T> *Node1, TreeMapNodeWParent<Comparable, T> *Node2){
+    Comparable *TempKey=Node1->Key;
+    T *TempData=Node2->Data;
+    Node1->Key=Node2->Key,Node1->Data=Node2->Data;
+    Node2->Key=TempKey,Node2->Data=TempData;
+}
+
+template<class Comparable,class T>
+Comparable* TreeMap<Comparable,T>::GetNodeKey(TreeMapNodeWParent<Comparable, T> *Node){
+    if(!Node) throw UncaughtException();
+    return Node->Key;
+}
+
+template<class Comparable,class T>
+TreeMapNodeWParent<Comparable, T>* TreeMap<Comparable,T>::GetLeftChild(TreeMapNodeWParent<Comparable, T> *Node){
+    if(!Node)throw UncaughtException();
+    return Node->Left;
+}
+
+template<class Comparable,class T>
+void TreeMap<Comparable, T>::SetLeftChild(TreeMapNodeWParent<Comparable, T> *Node, TreeMapNodeWParent<Comparable, T> *Child){
+    if(!Node)throw UncaughtException();
+    Node->Left=Child;
+}
+
+template<class Comparable,class T>
+TreeMapNodeWParent<Comparable, T>* TreeMap<Comparable, T>::GetRightChild(TreeMapNodeWParent<Comparable, T> *Node){
+    if(!Node)throw UncaughtException();
+    return Node->Right;
+}
+
+template<class Comparable,class T>
+void TreeMap<Comparable, T>::SetRightChild(TreeMapNodeWParent<Comparable, T> *Node, TreeMapNodeWParent<Comparable, T> *Child){
+    if(!Node)throw UncaughtException();
+    Node->Right=Child;
+}
+
+template<class Comparable,class T>
+TreeMapNodeWParent<Comparable, T>* TreeMap<Comparable, T>::GetParent(TreeMapNodeWParent<Comparable, T> *Node){
+    if(!Node)throw UncaughtException();
+    return Node->Parent;
+}
+
+template<class Comparable,class T>
+void TreeMap<Comparable, T>::SetParent(TreeMapNodeWParent<Comparable, T> *Node, TreeMapNodeWParent<Comparable, T> *Parent){
     if(!Node)throw UncaughtException();
     Node->Parent=Parent;
 }

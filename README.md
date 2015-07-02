@@ -1,8 +1,10 @@
-Data Structure Library for C++
+# Data Structure Library for C++
 
 These Structures have various algorithmic and database related appliances.
 
-Structures Included:
+Check out the [Wiki page](https://github.com/rafaelkallis/Data-Structures/wiki) for more details.
+
+### Structures Included:
 
 	->Stack
 	->Queue

@@ -17,7 +17,6 @@ public:
     ArrayList(){Init();}
     ~ArrayList(){Clean();}
     void    Insert(T *data);
-    void    RemoveLast();
     void    Set(int index,T *data);
     T*      Get(int index);
     void    Reset();
@@ -28,7 +27,6 @@ protected:
     T*      Data;
     
     void    Expand();
-    void    Collapse();
     void    Init();
     void    Clean();
 };
@@ -38,15 +36,15 @@ protected:
     An ArrayList with Extended functions
  */
 
-/*template <class T> class ArrayList_Ext: public ArrayList<T>{
+template <class T> class ArrayList_Ext: public ArrayList<T>{
 public:
-    void RemoveLast();
-    int  Find(T* Data);
-    void ShrinkToFit();
+    void    RemoveLast();
+    int     Find(T* Data);
+    void    ShrinkToFit();
 protected:
-    void Collapse();
+    void    Collapse();
     
-};*/
+};
 
 #include "arrays.cpp"
 #endif /* defined(__ADT__arrays__) */

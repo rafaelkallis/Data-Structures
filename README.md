@@ -11,6 +11,7 @@ Check out the [Wiki page](https://github.com/rafaelkallis/Data-Structures/wiki) 
 * Heap
 * Priority Queue
 * Tree (BST)
+* TreeMap (BST Dictionary)
 * Dynamic Array (Similar to Java's ArrayList, uses amortized dynamic memory allocation based on size)
 * List of Nodes and Containers used in different data structures
 
@@ -21,13 +22,13 @@ A Stack is a basic LIFO based data structured, useful in many appliances such as
 
 Stack is found in `adt.h` and respective member functions in `adt.cpp`
 
-### Constructor:
+###### Constructor:
 
 ```C++
 Stack<Type> *myStack=new Stack<Type>();
 ```
 
-### Public Functions:
+###### Public Functions:
 
 ```C++
 void Push(Type *Data);
@@ -67,13 +68,13 @@ A Queue is a basic FIFO based data structured, useful in many appliances such as
 
 The Queue is found in `adt.h` and member functions in `adr.cpp`
 
-### Constructor:
+###### Constructor:
 
 ```C++
 Queue<Type> *myQueue=new Queue<Type>();
 ```
 
-### Public Functions:
+###### Public Functions:
 
 ```C++
 void Push(Type *Data);

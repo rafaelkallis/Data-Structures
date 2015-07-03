@@ -59,12 +59,51 @@ int Size();
 ```C++
 int Temp=myStack->Size();
 ```
- Returns the total number of elements inside the Stack.
- ***
- ## Queue
+Returns the total number of elements inside the Stack.
+
+## Queue
  
 A Queue is a basic FIFO based data structured, useful in many appliances such as Web Server response management, or a Process Queue for the CPU.
 
 The Queue is found in `adt.h` and member functions in `adr.cpp`
 
-### Constructor
+### Constructor:
+
+```C++
+Queue<Type> *myQueue=new Queue<Type>();
+```
+
+### Public Functions:
+
+```C++
+void Push(Type *Data);
+```
+```C++
+myQueue->Push(new int(3))
+```
+Inserts Data into the Queue.
+***
+```C++
+Type* Top();
+```
+```C++
+int *Temp=myQueue->Top();
+```
+Returns the First Inserted Data without removing it from the Stack.
+***
+```C++
+void Pop();
+```
+```C++
+myQueue->Pop();
+```
+Removes the First Inserted Data from the Stack.
+***
+```C++
+int Size();
+```
+```C++
+int Temp=myQueue->Size()
+```
+Returns the total number of elements inside the Stack.
+

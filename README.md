@@ -6,7 +6,7 @@ Check out the [Wiki page](https://github.com/rafaelkallis/Data-Structures/wiki) 
 
 ### Structures Included:
 
-* Stack
+* [Stack](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#stack)
 * Queue
 * Heap
 * Priority Queue

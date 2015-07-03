@@ -96,15 +96,15 @@ void ABCHeap<Comparable,NodeType>::Perc_Down(int index){
 }
 
 /*
-    SimpleHeap
+    Heap
  */
 
-template<class Comparable>void SimpleHeap<Comparable>::Insert(Comparable *Data){
+template<class Comparable>void Heap<Comparable>::Insert(Comparable *Data){
     this->Data->Insert(new GenericNode<Comparable>(Data));
     ABCHeap<Comparable, GenericNode<Comparable>>::Insert();
 }
 
-template<class Comparable> Comparable* SimpleHeap<Comparable>::Extract(){
+template<class Comparable> Comparable* Heap<Comparable>::Extract(){
     Comparable* temp= new Comparable(*this->Data->Get(0)->key);
     ABCHeap<Comparable, GenericNode<Comparable>>::Extract();
     return temp;

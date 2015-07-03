@@ -11,9 +11,10 @@ These Structures have various algorithmic and database related appliances.
 * Tree (BST)
 * TreeMap (BST Dictionary)
 * [ArrayList, ArrayList-Ext](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#arraylist) (Similar to Java's ArrayList, uses amortized dynamic memory allocation based on size)
-* List of Nodes and Containers used in different data structures
+* Nodes and Containers used in different data structures
 
 ***
+
 ## Stack
 
 A `Stack` is a basic LIFO based data structured, useful in many appliances such as Topological Sort, Undo/Redo operations, Virtual machines (e.g JVM).
@@ -51,6 +52,7 @@ void Pop();
 myStack->Pop();
 ```
 Removes the Last Inserted Data from the Stack.
+
 ***
 ```C++
 int Size();

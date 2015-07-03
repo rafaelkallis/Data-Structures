@@ -118,15 +118,15 @@ protected:
 };
 
 /*
-    SimpleHeap
+    Heap
     Uses GenericNode<T>, a simple Node containing only a T* pointer.
 */
 
-template<class Comparable> class SimpleHeap: public ABCHeap<Comparable,GenericNode<Comparable>>{
+template<class Comparable> class Heap: public ABCHeap<Comparable,GenericNode<Comparable>>{
 public:
     
-    SimpleHeap(){ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList_Ext<GenericNode<Comparable>>;}
-    ~SimpleHeap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
+    Heap(){ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList_Ext<GenericNode<Comparable>>;}
+    ~Heap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
     
     void Insert(Comparable *Data);
     Comparable* Extract();

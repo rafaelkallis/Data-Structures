@@ -2,9 +2,7 @@
 
 These Structures have various algorithmic and database related appliances.
 
-Check out the [Wiki page](https://github.com/rafaelkallis/Data-Structures/wiki) for more details.
-
-### Structures Included:
+##### Structures Included:
 
 * [Stack](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#stack)
 * [Queue](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#queue)

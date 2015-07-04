@@ -6,8 +6,8 @@ These Structures have various algorithmic and database related appliances.
 
 * [Stack](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#stack)
 * [Queue](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#queue)
-* Heap
-* PriorityQueue
+* [Heap (Min & Max)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#heap)
+* [PriorityQueue (Min & Max)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#priorityqueue)
 * Tree (BST)
 * TreeMap (BST Dictionary)
 * [ArrayList, ArrayList-Ext](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#arraylist) (Similar to Java's ArrayList, uses amortized dynamic memory allocation based on size)
@@ -190,3 +190,53 @@ void ShrinkToFit();
 myArrayList_Ext->ShrinkToFit();
 ```
 Shrinks Array to last occupied space.
+
+## Heap
+
+A Heap is an essential Data Structure, used to guarantee O(log n) Retrieval and Insertion Time Complexity of the Biggest/Smallest Element in the Structure. Very usable for various Sorting Algorithms which rely on Operation with biggest/smallest element (Selection Sort).
+
+`Minheap` and `MaxHeap` can be found in `adt.h` and their member functions in `adt.cpp`
+
+###### Constructor:
+```C++
+MinHeap<Type> *myMinHeap=new MinHeap<Type>();
+MaxHeap<Type> *myMaxHeap=new MaxHeap<Type>();
+```
+###### Member Fucntions:
+```C++
+class MinHeap<Comparable>{
+    void        Insert(Comparable *Data);
+    Comparable* Extract();
+}
+```
+```C++
+myMinHeap->Insert(new int(3));
+```
+Inserts Data into the MinHeap.
+***
+```C++
+Comparable *Temp=myMinHeap->Extract();
+```
+Returns the Smallest/Biggest Data and Removes it from Heap.
+
+## PriorityQueue
+
+A Priority Queue is quite as essential as the Heap, and performs almost likewise. It has equal properties to a Heap, yet its applications differ. The main difference is that a Priority Queue acts like a Map. While inserting Data, you also assign a priority value to the Data. The Data with smallest/biggest priority gets Extracted first.
+
+Famous applications for Priority Queues include Dijkstras Shortest Path Algorithm, Prim-Jarnik Minimum Spanning Tree Algorithm etc.
+
+`MinPriorityQueue` and `MaxPriorityQueue` are included in `adt.h` and their respective member functions in `adt.cpp`
+
+###### Constructor:
+```C++
+MinPriorityQueue<Comparable,Type> *myMinPQ=new MinPriorityQueue<Comparable,Type>();
+MaxPriorityQueue<Comparable,Type> *myMaxPQ=new MaxPriorityQueue<Comparable,Type>();
+```
+
+###### Member Functions:
+```C++
+class MinPriorityQueue<Comparable, Type>{
+    void    Insert(Comparable* Priority, Type* Data);
+    Type*   Extract();
+}
+```

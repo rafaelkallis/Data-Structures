@@ -33,10 +33,10 @@ Stack<Type> *myStack=new Stack<Type>();
 
 ```C++
 Stack<Type>{
-    Type* Top();
-    void Pop();
-    void Push(Type *Data);
-    int Size();
+    Type*   Top();
+    void    Pop();
+    void    Push(Type *Data);
+    int     Size();
 }
 ```
 
@@ -78,10 +78,10 @@ Queue<Type> *myQueue=new Queue<Type>();
 
 ```C++
 Queue<Type>{
-    Type* Top();
-    void Pop();
-    void Push(Type *Data);
-    int Size();
+    Type*   Top();
+    void    Pop();
+    void    Push(Type *Data);
+    int     Size();
 }
 ```
 ```C++
@@ -125,69 +125,60 @@ ArrayList_Ext<Type> *myArrayList=new ArrayList_Ext<Type>();
 ```
 ###### Member Functions:
 ```C++
-void Insert(Type *Data);
+ArrayList<Type>{
+    void    Insert(Type *Data);
+    Type*   Get(int index);
+    void    Set(int index,Type *Data);
+    void    Reset();
+    int     Size();
+    /* Member Fucntions below are only in ArrayList_Ext<Type> */
+    void    RemoveLast();
+    int     Find(Type *Data);
+    void    ShrinkToFit();
+}
 ``` 
+***
 ```C++
 myArrayList->Insert(new int(3));
 ```
-Inserts Data into the ArrayList.
-***
-```C++
-Type* Get(int index);
-``` 
+* Inserts Data into the ArrayList.
+
 ```C++
 int *Temp=myArrayList->Get(1);
 ```
-Returns the Data inside position of index. If index is not valid it throws an OutofBoundsException.
-***
-```C++
-void Set(int index,Type *Data);
-```
+* Returns the Data inside position of index. If index is not valid it throws an OutofBoundsException.
+
 ```C++
 myArrayList->Set(1,new int(2));
 ```
-Changes the Data of position index with the new Data provided.
-***
-```C++
-void Reset();
-```
+* Changes the Data of position index with the new Data provided.
+
 ```C++
 myArrayList->Reset();
 ```
-Deletes All Data inside the ArrayList and Initialises it in its original capacity (2).
-***
-```C++
-int Size();
-```
+* Deletes All Data inside the ArrayList and Initialises it in its original capacity (2).
+
 ```C++
 int Temp=myStack->Size();
 ```
-Returns the total number of occupied positions inside the ArrayList.
-***
+* Returns the total number of occupied positions inside the ArrayList.
+
 ##### Only in `ArrayList_Ext`
-```C++
-void RemoveLast();
-```
+
 ```C++
 myArrayList_Ext->RemoveLast();
 ```
-Deletes the last occupied position's Data. Useful for Heaps and Priority Queues.
-***
-```C++
-int Find(Type *Data);
-```
+* Deletes the last occupied position's Data. Useful for Heaps and Priority Queues.
+
 ```C++
 int Temp=myArrayList_Ext->Find(new char'R');
 ```
-Performs Linear Search and returns index of Object's position.
-***
-```C++
-void ShrinkToFit();
-```
+* Performs Linear Search and returns index of Object's position.
+
 ```C++
 myArrayList_Ext->ShrinkToFit();
 ```
-Shrinks Array to last occupied space.
+* Shrinks Array to last occupied space.
 
 ## Heap
 
@@ -202,20 +193,21 @@ MaxHeap<Type> *myMaxHeap=new MaxHeap<Type>();
 ```
 ###### Member Fucntions:
 ```C++
-class MinHeap<Comparable>{
+MinHeap<Comparable>{
     void        Insert(Comparable *Data);
     Comparable* Extract();
 }
 ```
+***
 ```C++
 myMinHeap->Insert(new int(3));
 ```
-Inserts Data into the MinHeap.
-***
+* Inserts Data into the MinHeap.
+
 ```C++
 Comparable *Temp=myMinHeap->Extract();
 ```
-Returns the Smallest/Biggest Data and Removes it from Heap.
+* Returns the lowest/biggest Data and Removes it from Heap.
 
 ## PriorityQueue
 
@@ -233,8 +225,19 @@ MaxPriorityQueue<Comparable,Type> *myMaxPQ=new MaxPriorityQueue<Comparable,Type>
 
 ###### Member Functions:
 ```C++
-class MinPriorityQueue<Comparable, Type>{
+MinPriorityQueue<Comparable, Type>{
     void    Insert(Comparable* Priority, Type* Data);
     Type*   Extract();
 }
 ```
+***
+```C++
+myMinPQ->Insert(new int(100),new char('R'));
+```
+* Inserts 'R' into the PQ with Priority 100.
+
+```C++
+char* Temp=myMinPQ->Extract();
+```
+* Returns the char with lowest/highest priority.
+

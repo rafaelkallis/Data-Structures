@@ -73,7 +73,7 @@ protected:
 /*
     MinHeap Abstract Class
  
-    T: the Data type. NodeType: Node(Container) used for implementation
+    Comparable: the Data type. NodeType: Node(Container) used for implementation
  
     Insert(),Extract(): Worst Case - O(lg n)
  */
@@ -81,7 +81,7 @@ protected:
 template<class Comparable,class NodeType> class ABCHeap{
 public:
     
-    virtual ~ABCHeap(){}
+    virtual             ~ABCHeap(){}
     
     /* 
      Adds a Node(Container) of Object (of class Comparable) into Heap.
@@ -105,10 +105,14 @@ protected:
      */
     ArrayList_Ext<NodeType> *Data;
     
+    /* Assign a value in the constructor of your derived class! */
+    bool isMinHeap;
+    
     /* Returns Key of Node, depending on use this is used different. */
     virtual Comparable* GetNodeKey(int index)=0;
     
     /* Functions used by Insert() and Extract() */
+    bool                isSmaller(Comparable i,Comparable j);
     void                Swap(int i, int j);
     void                Perc_Up(int index);
     void                Perc_Down(int index);
@@ -122,36 +126,46 @@ protected:
     Uses GenericNode<T>, a simple Node containing only a T* pointer.
 */
 
-template<class Comparable> class Heap: public ABCHeap<Comparable,GenericNode<Comparable>>{
+template<class Comparable> class MinHeap: public ABCHeap<Comparable,GenericNode<Comparable>>{
 public:
     
-    Heap(){ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList_Ext<GenericNode<Comparable>>;}
-    ~Heap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
+    MinHeap(){this->isMinHeap=true;ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList_Ext<GenericNode<Comparable>>;}
+    ~MinHeap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
     
-    void Insert(Comparable *Data);
-    Comparable* Extract();
+    void            Insert(Comparable *Data);
+    Comparable*     Extract();
     
 protected:
     
-    Comparable* GetNodeKey(int index){
+    Comparable*     GetNodeKey(int index){
         return ABCHeap<Comparable,GenericNode<Comparable>>::Data->Get(index)->key;
 	}
 };
 
 /*
-    PriorityQueue
+    MaxHeap
+ */
+
+template<class Comparable> class MaxHeap: public MinHeap<Comparable>{
+public:
+    MaxHeap():MinHeap<Comparable>(){this->isMinHeap=false;}
+    ~MaxHeap(){};
+};
+
+/*
+    MinPriorityQueue
     Uses ArrayList of DoubleGenericNode<int,T>, each node consisting of:
     1) int* key1, used as the Priority key for comparison.
     2) T* key2, the actual Data.
 */
 
-template<class T> class PriorityQueue:public ABCHeap<int,DoubleGenericNode<int, T>>{
+template<class Comparable,class T> class MinPriorityQueue:public ABCHeap<int,DoubleGenericNode<Comparable, T>>{
 public:
     
-    PriorityQueue(){
-        ABCHeap<int,DoubleGenericNode<int,T>>::Data=new ArrayList_Ext<DoubleGenericNode<int,T>>();
+    MinPriorityQueue(){this->isMinHeap=true;
+        ABCHeap<Comparable,DoubleGenericNode<Comparable,T>>::Data=new ArrayList_Ext<DoubleGenericNode<Comparable,T>>();
     }
-    ~PriorityQueue(){delete this->Data;this->Data=NULL;}
+    ~MinPriorityQueue(){delete this->Data;this->Data=NULL;}
 
     /*
      Pretty straight-forward, Inserts a Node with Data and the Data's priority.
@@ -159,19 +173,28 @@ public:
      Insert(new int(3),new char('R'));
      => Inserts a new node of char value 'R' and priority 3. <=
      */
-    void    Insert(int* priority, T* Data);
+    void            Insert(Comparable* priority, T* Data);
     
     /* Returns the Object with smallest Priority. */
-    T*      Extract();
+    T*              Extract();
     
 protected:
-    
     /* Returns key1 used for priority comparison */
-    int*    GetNodeKey(int index){
+    Comparable*     GetNodeKey(int index){
         return ABCHeap<int,DoubleGenericNode<int, T>>::Data->Get(index)->key1;}
-    
 };
 
+/*
+    MaxPriorityQueue
+ */
+
+template<class Comparable,class T> class MaxPriorityQueue:public MinPriorityQueue<Comparable,T>{
+public:
+    
+    MaxPriorityQueue():MinPriorityQueue<Comparable,T>(){this->isMinHeap=false;}
+    ~MaxPriorityQueue(){}
+
+};
 
 /*
     Abstract Tree Class

@@ -131,7 +131,7 @@ ArrayList<Type>{
     void    Set(int index,Type *Data);
     void    Reset();
     int     Size();
-    /* Member Fucntions below are only in ArrayList_Ext<Type> */
+    /* Member Functions below are only in ArrayList_Ext<Type> */
     void    RemoveLast();
     int     Find(Type *Data);
     void    ShrinkToFit();

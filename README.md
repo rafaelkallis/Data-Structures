@@ -8,8 +8,8 @@ These Structures have various algorithmic and database related appliances.
 * [Queue](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#queue)
 * [Heap (Min & Max)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#heap)
 * [PriorityQueue (Min & Max)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#priorityqueue)
-* Tree (Binary Search Tree)
-* TreeMap (BST Dictionary)
+* [Tree (Binary Search Tree)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#tree)
+* [TreeMap (BST Dictionary)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#treemap)
 * [ArrayList, ArrayList-Ext](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#arraylist) (Similar to Java's ArrayList, uses amortized dynamic memory allocation based on size)
 * Nodes and Containers used in different data structures
 
@@ -259,3 +259,46 @@ char* Temp=myMinPQ->Extract();
 char* Temp=myMinPQ->Peek();
 ```
 * Returns the char with lowest/highest priority without removing it from PQ. 
+
+## Tree
+
+A binary search tree is a rooted binary tree, whose internal nodes each store a key. The tree additionally satisfies the binary search tree property, which states that the key in each node must be greater than all keys stored in the left sub-tree, and smaller than all keys in right sub-tree.
+
+You can find it in `adt.h` and all respective member functions in `adt.cpp`
+
+###### Constructor:
+
+```C++
+Tree<Type> *myBST=new Tree<Type>();
+```
+###### Member functions:
+```C++
+Tree<Type>{
+    void     Insert(Comparable *Key);
+    void     Delete(Comparable *Key);
+    void     Reset();
+
+    void     PrintInOrder();
+    void     PrintGraph();
+}
+```
+
+## TreeMap
+
+A TreeMap is a rooted binary tree, whose internal nodes each store a key and an associated value or data with it.
+
+It's located in `adt.h` and its members functions in `adt.cpp`
+
+###### Constructor:
+
+```C++
+TreeMap<Comparable,Type> *myTreeMap=new TreeMap<COmparable,Type>();
+```
+###### Member Functions:
+```C++
+TreeMap<Comparable,Type>{
+    void    Insert(Comparable *Key, T *Data);
+    T*      Extract(Comparable *Key);
+    void    Edit(Comparable *Key, T *Data);
+}
+

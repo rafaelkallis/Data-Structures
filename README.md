@@ -8,10 +8,12 @@ These Structures have various algorithmic and database related appliances.
 * [Queue](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#queue)
 * [Heap (Min & Max)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#heap)
 * [PriorityQueue (Min & Max)](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#priorityqueue)
-* Tree (BST)
+* Tree (Binary Search Tree)
 * TreeMap (BST Dictionary)
 * [ArrayList, ArrayList-Ext](https://github.com/rafaelkallis/Data-Structures/blob/master/README.md#arraylist) (Similar to Java's ArrayList, uses amortized dynamic memory allocation based on size)
 * Nodes and Containers used in different data structures
+
+##### Work In Progress: Red Black Trees, Hash Tables / Functions.
 
 ***
 
@@ -27,40 +29,38 @@ A `Stack` is a basic LIFO based data structured, useful in many appliances such 
 Stack<Type> *myStack=new Stack<Type>();
 ```
 
-###### Public Functions:
+###### Member Functions:
 
 ```C++
-void Push(Type *Data);
+Stack<Type>{
+    Type* Top();
+    void Pop();
+    void Push(Type *Data);
+    int Size();
+}
 ```
+
+***
+
 ```C++
 myStack->Push(new int(3));
 ```
-Inserts Data into the Stack.
-***
-```C++
-Type* Top();
-```
+* Inserts Data into the Stack.
+
 ```C++
 int *Temp=Stack->Top()
 ```
-Returns the Last Inserted Data without removing it from the Stack.
-***
-```C++
-void Pop();
-```
+* Returns the Last Inserted Data without removing it from the Stack.
+
 ```C++
 myStack->Pop();
 ```
-Removes the Last Inserted Data from the Stack.
+* Removes the Last Inserted Data from the Stack.
 
-***
-```C++
-int Size();
-```
 ```C++
 int Temp=myStack->Size();
 ```
-Returns the total number of elements inside the Stack.
+* Returns the total number of elements inside the Stack.
 
 ## Queue
  
@@ -74,39 +74,37 @@ A `Queue` is a basic FIFO based data structured, useful in many appliances such 
 Queue<Type> *myQueue=new Queue<Type>();
 ```
 
-###### Public Functions:
+###### Member Functions:
 
 ```C++
-void Push(Type *Data);
+Queue<Type>{
+    Type* Top();
+    void Pop();
+    void Push(Type *Data);
+    int Size();
+}
 ```
 ```C++
 myQueue->Push(new int(3))
 ```
-Inserts Data into the Queue.
-***
-```C++
-Type* Top();
-```
+* Inserts Data into the Queue.
+
+
 ```C++
 int *Temp=myQueue->Top();
 ```
-Returns the First Inserted Data without removing it from the Stack.
-***
-```C++
-void Pop();
-```
+* Returns the First Inserted Data without removing it from the Stack.
+
+
 ```C++
 myQueue->Pop();
 ```
-Removes the First Inserted Data from the Stack.
-***
-```C++
-int Size();
-```
+* Removes the First Inserted Data from the Stack.
+
 ```C++
 int Temp=myQueue->Size()
 ```
-Returns the total number of elements inside the Stack.
+* Returns the total number of elements inside the Stack.
 
 ## ArrayList
 
@@ -125,7 +123,7 @@ For more info, there is a [Wikipedia Article](https://en.wikipedia.org/wiki/Dyna
 ArrayList<Type> *myArrayList=new ArrayList<Type>();
 ArrayList_Ext<Type> *myArrayList=new ArrayList_Ext<Type>();
 ```
-###### Public Functions:
+###### Member Functions:
 ```C++
 void Insert(Type *Data);
 ``` 

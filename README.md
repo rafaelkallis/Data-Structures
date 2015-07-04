@@ -199,6 +199,7 @@ MaxHeap<Type> *myMaxHeap=new MaxHeap<Type>();
 MinHeap<Comparable>{
     void        Insert(Comparable *Data);
     Comparable* Extract();
+    Comparable* Peek();
 }
 ```
 
@@ -213,6 +214,11 @@ myMinHeap->Insert(new int(3));
 Comparable *Temp=myMinHeap->Extract();
 ```
 * Returns the lowest/biggest Data and Removes it from Heap.
+
+```C++
+Comparable *Temp=myMinHeap->Peek();
+```
+* Returns the lowest/highest Data without removing it from Heap.
 
 ## PriorityQueue
 
@@ -233,6 +239,7 @@ MaxPriorityQueue<Comparable,Type> *myMaxPQ=new MaxPriorityQueue<Comparable,Type>
 MinPriorityQueue<Comparable, Type>{
     void    Insert(Comparable* Priority, Type* Data);
     Type*   Extract();
+    Type*   Peek();
 }
 ```
 
@@ -246,5 +253,9 @@ myMinPQ->Insert(new int(100),new char('R'));
 ```C++
 char* Temp=myMinPQ->Extract();
 ```
-* Returns the char with lowest/highest priority.
+* Returns the char with lowest/highest priority and removes it from PQ.
 
+```C++
+char* Temp=myMinPQ->Peek();
+```
+* Returns the char with lowest/highest priority without removing it from PQ. 

@@ -135,6 +135,9 @@ public:
     void            Insert(Comparable *Data);
     Comparable*     Extract();
     
+    /* Returns Value as in Extract without Removing it from the Heap */
+    Comparable*     Peek();
+    
 protected:
     
     Comparable*     GetNodeKey(int index){
@@ -175,8 +178,11 @@ public:
      */
     void            Insert(Comparable* priority, T* Data);
     
-    /* Returns the Object with smallest Priority. */
+    /* Returns the Object with smallest/biggest Priority and removes it from the PQ */
     T*              Extract();
+    
+    /* Returns the Object with smallest/biggest Priority without removing it */
+    T*              Peek();
     
 protected:
     /* Returns key1 used for priority comparison */

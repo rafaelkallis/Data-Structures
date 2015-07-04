@@ -115,6 +115,10 @@ template<class Comparable> Comparable* MinHeap<Comparable>::Extract(){
     return temp;
 }
 
+template<class Comparable> Comparable* MinHeap<Comparable>::Peek(){
+    return this->Data->Get(0)->key;
+}
+
 /*
     PriorityQueue
     Comparable is used as Priority
@@ -130,6 +134,10 @@ template<class Comparable,class T> T* MinPriorityQueue<Comparable,T>::Extract(){
     T* Temp=new T(*this->Data->Get(0)->key2);
     ABCHeap<Comparable, DoubleGenericNode<Comparable,T>>::Extract();
     return Temp;
+}
+
+template<class Comparable, class T> T* MinPriorityQueue<Comparable,T>::Peek(){
+    return this->Data->Get(0)->key2;
 }
 
 /*

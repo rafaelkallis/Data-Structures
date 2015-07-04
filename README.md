@@ -84,17 +84,18 @@ Queue<Type>{
     int     Size();
 }
 ```
+
+***
+
 ```C++
 myQueue->Push(new int(3))
 ```
 * Inserts Data into the Queue.
 
-
 ```C++
 int *Temp=myQueue->Top();
 ```
 * Returns the First Inserted Data without removing it from the Stack.
-
 
 ```C++
 myQueue->Pop();
@@ -117,7 +118,7 @@ The Array Expands when it's filled up. It grows by a 1.5 factor, which close to 
 `ArrayList_Ext` is a derived `ArrayList` class which provides extended functions. Collapses when its used capacity is 45% of the available capacity. I have chosen this factor as after private research I concluded it's efficient enough. (Minimises repeatedly shrinking and growing of array so it keeps the amortised costs as low as possible).
 
 For more info, there is a [Wikipedia Article](https://en.wikipedia.org/wiki/Dynamic_array).
-***
+
 ###### Constructor:
 ```C++
 ArrayList<Type> *myArrayList=new ArrayList<Type>();
@@ -136,8 +137,10 @@ ArrayList<Type>{
     int     Find(Type *Data);
     void    ShrinkToFit();
 }
-``` 
+```
+
 ***
+
 ```C++
 myArrayList->Insert(new int(3));
 ```
@@ -198,7 +201,9 @@ MinHeap<Comparable>{
     Comparable* Extract();
 }
 ```
+
 ***
+
 ```C++
 myMinHeap->Insert(new int(3));
 ```
@@ -230,7 +235,9 @@ MinPriorityQueue<Comparable, Type>{
     Type*   Extract();
 }
 ```
+
 ***
+
 ```C++
 myMinPQ->Insert(new int(100),new char('R'));
 ```

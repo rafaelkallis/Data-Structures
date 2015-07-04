@@ -51,7 +51,7 @@ template<class T>int Queue<T>::Size(){
 }
 
 /*
-    MinHeap Abstract Class
+    Heap Abstract Class
     T: the Data type. NodeType: Node used for implementation
 */
 
@@ -75,6 +75,11 @@ void ABCHeap<Comparable,NodeType>::Extract(){
 }
 
 template<class Comparable,class NodeType>
+bool ABCHeap<Comparable, NodeType>::isSmaller(Comparable i,Comparable j){
+    return i < j;
+}
+
+template<class Comparable,class NodeType>
 void ABCHeap<Comparable,NodeType>::Swap(int i, int j){
     NodeType *temp=new NodeType(*this->Data->Get(i));
     this->Data->Set(i,this->Data->Get(j));
@@ -83,15 +88,15 @@ void ABCHeap<Comparable,NodeType>::Swap(int i, int j){
 
 template<class Comparable,class NodeType>
 void ABCHeap<Comparable,NodeType>::Perc_Up(int index){
-    if(index > 0 && *GetNodeKey(index) < *GetNodeKey(Parent(index)))
-       Swap(index,Parent(index)),Perc_Up(Parent(index));
+    if(index > 0 && (isMinHeap==isSmaller(*GetNodeKey(index), *GetNodeKey(Parent(index)))))
+        Swap(index,Parent(index)),Perc_Up(Parent(index));
 }
 
 template<class Comparable,class NodeType>
 void ABCHeap<Comparable,NodeType>::Perc_Down(int index){
     int m=index,l=this->Left(index),r=this->Right(index);
-    if (l < this->Data->Size() && *GetNodeKey(l) < *GetNodeKey(m)) m=l;
-    if (r < this->Data->Size() && *GetNodeKey(r) < *GetNodeKey(m)) m=r;
+    if (l < this->Data->Size() && (isMinHeap==isSmaller(*GetNodeKey(l), *GetNodeKey(m)))) m=l;
+    if (r < this->Data->Size() && (isMinHeap==isSmaller(*GetNodeKey(r), *GetNodeKey(m)))) m=r;
     if(index!=m) Swap(index,m),Perc_Down(m);
 }
 
@@ -99,12 +104,12 @@ void ABCHeap<Comparable,NodeType>::Perc_Down(int index){
     Heap
  */
 
-template<class Comparable>void Heap<Comparable>::Insert(Comparable *Data){
+template<class Comparable>void MinHeap<Comparable>::Insert(Comparable *Data){
     this->Data->Insert(new GenericNode<Comparable>(Data));
     ABCHeap<Comparable, GenericNode<Comparable>>::Insert();
 }
 
-template<class Comparable> Comparable* Heap<Comparable>::Extract(){
+template<class Comparable> Comparable* MinHeap<Comparable>::Extract(){
     Comparable* temp= new Comparable(*this->Data->Get(0)->key);
     ABCHeap<Comparable, GenericNode<Comparable>>::Extract();
     return temp;
@@ -112,17 +117,19 @@ template<class Comparable> Comparable* Heap<Comparable>::Extract(){
 
 /*
     PriorityQueue
+    Comparable is used as Priority
+    T is used as Data Type
  */
 
-template<class T> void PriorityQueue<T>::Insert(int* priority, T* Data){
-    this->Data->Insert(new DoubleGenericNode<int, T>(priority,Data));
-    ABCHeap<int, DoubleGenericNode<int,T>>::Insert();
+template<class Comparable,class T> void MinPriorityQueue<Comparable,T>::Insert(Comparable* priority, T* Data){
+    this->Data->Insert(new DoubleGenericNode<Comparable, T>(priority,Data));
+    ABCHeap<Comparable, DoubleGenericNode<Comparable,T>>::Insert();
 }
 
-template<class T> T* PriorityQueue<T>::Extract(){
-    T* temp=new T(*this->Data->Get(0)->key2);
-    ABCHeap<int, DoubleGenericNode<int,T>>::Extract();
-    return temp;
+template<class Comparable,class T> T* MinPriorityQueue<Comparable,T>::Extract(){
+    T* Temp=new T(*this->Data->Get(0)->key2);
+    ABCHeap<Comparable, DoubleGenericNode<Comparable,T>>::Extract();
+    return Temp;
 }
 
 /*

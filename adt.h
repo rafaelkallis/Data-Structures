@@ -40,8 +40,8 @@ protected:
      2) Pointer to next Node.
      GenericSingleListNode<T> definition found in nodes.h
      */
-	GenericSingleListNode<T> *Head;
-	int     size;
+	SingleListNode<T>*  Head;
+	int                 size;
 };
 
 /*
@@ -66,7 +66,7 @@ protected:
         2) Pointer to next Node.
         GenericSingleListNode<T> definition found in nodes.h
      */
-    GenericSingleListNode<T> *Head,*Tail;
+    SingleListNode<T> *Head,*Tail;
     int     size;
 };
 
@@ -126,11 +126,14 @@ protected:
     Uses GenericNode<T>, a simple Node containing only a T* pointer.
 */
 
-template<class Comparable> class MinHeap: public ABCHeap<Comparable,GenericNode<Comparable>>{
+template<class Comparable>
+class MinHeap: public ABCHeap<Comparable,Node<Comparable>>{
 public:
     
-    MinHeap(){this->isMinHeap=true;ABCHeap<Comparable,GenericNode<Comparable>>::Data=new ArrayList_Ext<GenericNode<Comparable>>;}
-    ~MinHeap(){delete ABCHeap<Comparable,GenericNode<Comparable>>::Data;}
+    MinHeap(){this->isMinHeap=true;ABCHeap<Comparable,Node<Comparable>>::Data=
+        new ArrayList_Ext<Node<Comparable>>;
+    }
+    ~MinHeap(){delete ABCHeap<Comparable,Node<Comparable>>::Data;}
     
     void            Insert(Comparable *Data);
     Comparable*     Extract();
@@ -141,7 +144,7 @@ public:
 protected:
     
     Comparable*     GetNodeKey(int index){
-        return ABCHeap<Comparable,GenericNode<Comparable>>::Data->Get(index)->key;
+        return ABCHeap<Comparable,Node<Comparable>>::Data->Get(index)->key;
 	}
 };
 
@@ -157,16 +160,18 @@ public:
 
 /*
     MinPriorityQueue
-    Uses ArrayList of DoubleGenericNode<int,T>, each node consisting of:
+    Uses ArrayList of MapNode<int,T>, each node consisting of:
     1) int* key1, used as the Priority key for comparison.
     2) T* key2, the actual Data.
 */
 
-template<class Comparable,class T> class MinPriorityQueue:public ABCHeap<int,DoubleGenericNode<Comparable, T>>{
+template<class Comparable,class T>
+class MinPriorityQueue:public ABCHeap<int,MapNode<Comparable, T>>{
 public:
     
     MinPriorityQueue(){this->isMinHeap=true;
-        ABCHeap<Comparable,DoubleGenericNode<Comparable,T>>::Data=new ArrayList_Ext<DoubleGenericNode<Comparable,T>>();
+        ABCHeap<Comparable,MapNode<Comparable,T>>::Data=
+        new ArrayList_Ext<MapNode<Comparable,T>>();
     }
     ~MinPriorityQueue(){delete this->Data;this->Data=NULL;}
 
@@ -178,7 +183,7 @@ public:
      */
     void            Insert(Comparable* priority, T* Data);
     
-    /* Returns the Object with smallest/biggest Priority and removes it from the PQ */
+/*Returns the Object with smallest/biggest Priority and removes it from the PQ*/
     T*              Extract();
     
     /* Returns the Object with smallest/biggest Priority without removing it */
@@ -187,14 +192,15 @@ public:
 protected:
     /* Returns key1 used for priority comparison */
     Comparable*     GetNodeKey(int index){
-        return ABCHeap<int,DoubleGenericNode<int, T>>::Data->Get(index)->key1;}
+        return ABCHeap<int,MapNode<int, T>>::Data->Get(index)->key1;}
 };
 
 /*
     MaxPriorityQueue
  */
 
-template<class Comparable,class T> class MaxPriorityQueue:public MinPriorityQueue<Comparable,T>{
+template<class Comparable,class T>
+class MaxPriorityQueue:public MinPriorityQueue<Comparable,T>{
 public:
     
     MaxPriorityQueue():MinPriorityQueue<Comparable,T>(){this->isMinHeap=false;}
@@ -263,7 +269,8 @@ protected:
     Node has a Comparable Object and 3 Pointers(Parent, Left Child, Right Child)
  */
 
-template<class Comparable> class Tree: public ABCtree<Comparable, TreeNodeWParent<Comparable>>{
+template<class Comparable>
+class Tree: public ABCtree<Comparable, TreeNode<Comparable>>{
 public:
     
     Tree(){this->Root=NULL;}
@@ -271,14 +278,25 @@ public:
     
 protected:
     
-    void Swap(TreeNodeWParent<Comparable> *Node1,TreeNodeWParent<Comparable> *Node2);
-    Comparable *GetNodeKey(TreeNodeWParent<Comparable> *Node);
-    TreeNodeWParent<Comparable> *GetLeftChild(TreeNodeWParent<Comparable> *Node);
-    void SetLeftChild(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Child);
-    TreeNodeWParent<Comparable> *GetRightChild(TreeNodeWParent<Comparable> *Node);
-    void SetRightChild(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Child);
-    TreeNodeWParent<Comparable> *GetParent(TreeNodeWParent<Comparable> *Node);
-    void SetParent(TreeNodeWParent<Comparable> *Node,TreeNodeWParent<Comparable> *Parent);
+    void                    Swap(TreeNode<Comparable> *Node1,
+                                 TreeNode<Comparable> *Node2);
+    
+    Comparable*             GetNodeKey(TreeNode<Comparable> *Node);
+    
+    TreeNode<Comparable>*   GetLeftChild(TreeNode<Comparable> *Node);
+    
+    void                    SetLeftChild(TreeNode<Comparable> *Node,
+                                         TreeNode<Comparable> *Child);
+    
+    TreeNode<Comparable>*   GetRightChild(TreeNode<Comparable> *Node);
+    
+    void                    SetRightChild(TreeNode<Comparable> *Node,
+                                          TreeNode<Comparable> *Child);
+    
+    TreeNode<Comparable>*   GetParent(TreeNode<Comparable> *Node);
+    
+    void                    SetParent(TreeNode<Comparable> *Node,
+                                      TreeNode<Comparable> *Parent);
 };
 
 /*
@@ -286,31 +304,43 @@ protected:
     Links Keys with Data.
  */
 
-template<class Comparable,class T> class TreeMap: public ABCtree<Comparable, TreeMapNodeWParent<Comparable, T>>{
+template<class Comparable,class T>
+class TreeMap: public ABCtree<Comparable, TreeMapNode<Comparable, T>>{
 public:
     
     TreeMap(){this->Root=NULL;}
     ~TreeMap(){this->Reset();}
     
     /* Input Key with Linked Data */
-    void    Insert(Comparable *Key, T *Data);
+    void                        Insert(Comparable *Key, T *Data);
     
     /* Maps to the Linked Data of Selected Key */
-    T*       Extract(Comparable *Key);
+    T*                          Extract(Comparable *Key);
     
     /* Overrides Selected Key's Data with new Data */
-    void    Edit(Comparable *Key, T *Data);
+    void                        Edit(Comparable *Key, T *Data);
     
 protected:
     
-    void Swap(TreeMapNodeWParent<Comparable, T> *Node1,TreeMapNodeWParent<Comparable, T> *Node2);
-    Comparable *GetNodeKey(TreeMapNodeWParent<Comparable, T> *Node);
-    TreeMapNodeWParent<Comparable, T> *GetLeftChild(TreeMapNodeWParent<Comparable, T> *Node);
-    void SetLeftChild(TreeMapNodeWParent<Comparable, T> *Node,TreeMapNodeWParent<Comparable, T> *Child);
-    TreeMapNodeWParent<Comparable, T> *GetRightChild(TreeMapNodeWParent<Comparable, T> *Node);
-    void SetRightChild(TreeMapNodeWParent<Comparable, T> *Node,TreeMapNodeWParent<Comparable, T> *Child);
-    TreeMapNodeWParent<Comparable, T> *GetParent(TreeMapNodeWParent<Comparable, T> *Node);
-    void SetParent(TreeMapNodeWParent<Comparable, T> *Node,TreeMapNodeWParent<Comparable, T> *Parent);
+    void                        Swap(TreeMapNode<Comparable, T> *Node1,
+                                     TreeMapNode<Comparable, T> *Node2);
+    
+    Comparable*                 GetNodeKey(TreeMapNode<Comparable, T> *Node);
+    
+    TreeMapNode<Comparable, T>* GetLeftChild(TreeMapNode<Comparable, T> *Node);
+    
+    void                        SetLeftChild(TreeMapNode<Comparable, T> *Node,
+                                             TreeMapNode<Comparable, T> *Child);
+    
+    TreeMapNode<Comparable, T>* GetRightChild(TreeMapNode<Comparable, T> *Node);
+    
+    void                        SetRightChild(TreeMapNode<Comparable,T> *Node,
+                                              TreeMapNode<Comparable,T> *Child);
+    
+    TreeMapNode<Comparable, T>* GetParent(TreeMapNode<Comparable, T> *Node);
+    
+    void                        SetParent(TreeMapNode<Comparable, T> *Node,
+                                          TreeMapNode<Comparable, T> *Parent);
 };
 
 #include "adt.cpp"

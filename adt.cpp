@@ -168,53 +168,62 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
     /* Node is Root, has no Children */
     else if(!LeftChild && !RightChild && !Parent){
         this->Root=NULL;
-    
+        return;
+        
     /* Node has no Children, is a Left Child */
     }else if(!LeftChild && !RightChild && isaLeftChild){
         SetLeftChild(Parent,NULL);
-    
+        DeleteFixLeft(toDelete, Sentinel(Parent));
+        
     /* Node has no Children, is a Right Child */
     }else if(!LeftChild && !RightChild && !isaLeftChild){
         SetRightChild(Parent,NULL);
-    
+        DeleteFixRight(toDelete, Sentinel(Parent));
+        
     /* Node has only a Left Child, is a Left Child */
     }else if(LeftChild && !RightChild && isaLeftChild){
         SetLeftChild(Parent, LeftChild);
         SetParent(LeftChild,Parent);
+        DeleteFixLeft(toDelete, LeftChild);
         
         /* Node has only a Right Child, is a Left Child */
     }else if(!LeftChild && RightChild && isaLeftChild){
         SetLeftChild(Parent, RightChild);
         SetParent(RightChild, Parent);
+        DeleteFixLeft(toDelete, RightChild);
         
         /* Node has only a Left Child, is a Right Child */
     }else if(LeftChild && !RightChild && !isaLeftChild){
         SetRightChild(Parent, LeftChild);
         SetParent(LeftChild, Parent);
+        DeleteFixRight(toDelete, LeftChild);
         
-        /* Node has only a Right Child, is a Left Child */
+        /* Node has only a Right Child, is a Right Child */
     }else if(!LeftChild && RightChild && !isaLeftChild){
         SetRightChild(Parent, RightChild);
         SetParent(RightChild, Parent);
+        DeleteFixRight(toDelete, RightChild);
         
+        /* Node has 2 Children */
     }else{
         NodeType *Temp=Smallest(RightChild);
-        
         this->Swap(toDelete,Temp);
-        /* Node has 2 Children, is a Right Child */
+        
+        /* Used to Prevent a Nasty Bug */
         if(Temp==RightChild){
             SetRightChild(toDelete, GetRightChild(Temp));
             if(GetRightChild(Temp))
                 SetParent(GetRightChild(Temp),GetParent(Temp));
         }else{
-        /* Node has 2 Children, is a Left Child */
             SetLeftChild(GetParent(Temp), GetRightChild(Temp));
             if(GetRightChild(Temp))
                 SetParent(GetRightChild(Temp), GetParent(Temp));
         }
         toDelete=Temp;
+        if(GetRightChild(toDelete)) DeleteFixLeft(toDelete, GetRightChild(toDelete));
+        else DeleteFixLeft(toDelete, Sentinel(GetParent(toDelete)));
+        
     }
-    //this->DeleteFix(toDelete)
     delete toDelete;
     toDelete=NULL;
 }
@@ -238,7 +247,7 @@ void ABCtree<Comparable,NodeType>::PrintGraph(){
 
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::Insert(NodeType *Node){
-    if(!this->Root)this->Root=Node;
+    if(!this->Root)this->Root=Node; //FIXME: set colour to black
     else{
         NodeType *Temp,*Follow;Temp=Follow=this->Root;
         while(Temp){
@@ -246,12 +255,16 @@ void ABCtree<Comparable,NodeType>::Insert(NodeType *Node){
             if(*GetNodeKey(Node) < *GetNodeKey(Temp))Temp=GetLeftChild(Temp);
             else Temp=GetRightChild(Temp);
         }
-        if(*GetNodeKey(Node) < *GetNodeKey(Follow))
+        if(*GetNodeKey(Node) < *GetNodeKey(Follow)){
             SetLeftChild(Follow,Node);
-        else SetRightChild(Follow,Node);
-        SetParent(Node, Follow);
+            SetParent(Node, Follow);
+            InsertFixLeft(Node);
+        }else{
+            SetRightChild(Follow,Node);
+            SetParent(Node, Follow);
+            InsertFixRight(Node);
+        }
     }
-    this->InsertFix(Node);
 }
 
 template<class Comparable,class NodeType>
@@ -437,3 +450,171 @@ void TreeMap<Comparable, T>::SetParent(TreeMapNode<Comparable, T> *Node, TreeMap
     if(!Node)throw UncaughtException();
     Node->Parent=Parent;
 }
+
+/*
+    Red Black Tree
+*/
+
+//template<class Comparable>
+//void RBTree<Comparable>::InsertFixRight(RBTNode<Comparable> *Inserted){
+//    
+//    /* Inserted Node is Root > Set Colour to Black */
+//    if(Inserted==this->Root){ Inserted->Black=1; return;
+//    
+//    /* If parent of Inserted is black > Nothing to do! */
+//    }else if(GetParent(Inserted)->black) return;
+//    
+//    RBTNode<Comparable> Uncle;
+//    if(this->isLeftChild(GetParent(Inserted)))
+//            Uncle=GetRightChild(GetParent(GetParent(Inserted)));
+//    else    Uncle=GetLeftChild(GetParent(GetParent(Inserted)));
+//    
+//    bool isParentLeftChild=this->isLeftChild(Parent);
+//    bool pBlack=GetParent(Inserted)->black;
+//    bool gBlack=GetParent(GetParent(Inserted));
+//    bool uBlack;
+//    if(!Uncle)uBlack=1; else uBlack=Uncle->black;
+//        
+//    /* Parent is Left Child & Uncle is Red > Case 1 */
+//    if((isParentLeftChild && !uBlack){
+//            
+//    /* Parent is Right Child & Uncle is Red > Case 1m */
+//    }else if(!isParentLeftChild && !uBlack){
+//               
+//    }else if(this->isLeftChild(Parent) && !GetRightChild(<#RBTNode<Comparable> *Node#>))
+//    }
+//}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteFixRight(RBTNode<Comparable> *toDelete, RBTNode<Comparable> *Replacement){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertFixLeft(RBTNode<Comparable> *Inserted){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteFixLeft(RBTNode<Comparable> *toDelete, RBTNode<Comparable> *Replacement){
+    
+}
+
+template<class Comparable>
+RBTNode<Comparable>* RBTree<Comparable>::Sentinel(RBTNode<Comparable> *Parent){
+    return new RBTNode<Comparable>(NULL,NULL,NULL,Parent,'B');
+}
+
+template<class Comparable>
+void RBTree<Comparable>::Swap(RBTNode<Comparable> *Node1, RBTNode<Comparable> *Node2){
+    if(!Node1 || !Node2) throw UncaughtException();
+    Comparable *Temp=Node1->Key;
+    Node1->Key=Node2->Key;
+    Node2->Key=Temp;
+}
+
+template<class Comparable>
+Comparable* RBTree<Comparable>::GetNodeKey(RBTNode<Comparable> *Node){
+    return Node->Key;
+}
+
+template<class Comparable>
+RBTNode<Comparable>* RBTree<Comparable>::GetLeftChild(RBTNode<Comparable> *Node){
+    return Node->Left;
+}
+
+template<class Comparable>
+void RBTree<Comparable>::SetLeftChild(RBTNode<Comparable> *Node, RBTNode<Comparable> *Child){
+    Node->Left=Child;
+}
+
+template<class Comparable>
+RBTNode<Comparable>* RBTree<Comparable>::GetRightChild(RBTNode<Comparable> *Node){
+    return Node->Right;
+}
+
+template<class Comparable>
+void RBTree<Comparable>::SetRightChild(RBTNode<Comparable> *Node, RBTNode<Comparable> *Child){
+    Node->Right=Child;
+}
+
+template<class Comparable>
+RBTNode<Comparable>* RBTree<Comparable>::GetParent(RBTNode<Comparable> *Node){
+    return Node->Parent;
+}
+
+template<class Comparable>
+void RBTree<Comparable>::SetParent(RBTNode<Comparable> *Node, RBTNode<Comparable> *Parent){
+    Node->Parent=Parent;
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertCase1(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertCase2(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertCase3(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertCase1m(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertCase2m(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::InsertCase3m(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase1(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase2(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase3(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase4(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase1m(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase2m(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase3m(RBTNode<Comparable> *Node){
+    
+}
+
+template<class Comparable>
+void RBTree<Comparable>::DeleteCase4m(RBTNode<Comparable> *Node){
+    
+}
+

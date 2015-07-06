@@ -67,31 +67,31 @@ public:
 /* Red Black Tree Node */
 template<class Comparable> class RBTNode{
 public:
-    RBTNode(){Key=NULL;Left=Right=Parent=NULL;col='\0';}
-    RBTNode(Comparable *Key,RBTNode *Left,RBTNode *Right,RBTNode *Parent, char Colour)
-    :Key(Key),Left(Left),Right(Right),Parent(Parent),col(Colour){}
-    RBTNode(Comparable *Key):Key(Key){Left=Right=Parent=NULL;col='B';}
+    RBTNode(){Key=NULL;Left=Right=Parent=NULL;black=0;}
+    RBTNode(Comparable *Key,RBTNode *Left,RBTNode *Right,RBTNode *Parent, bool black)
+    :Key(Key),Left(Left),Right(Right),Parent(Parent),black(black){}
+    RBTNode(Comparable *Key):Key(Key){Left=Right=Parent=NULL;black=0;}
     ~RBTNode(){delete Key,Left=Right=Parent=NULL;}
     
     Comparable *Key;
     RBTNode *Left,*Right,*Parent;
-    char col;
+    bool black;
 };
 
 /* Red Black Tree Dictionary Node */
 template<class Comparable, class T> class RBTMapNode{
 public:
-    RBTMapNode(){Key=NULL;Data=NULL;Left=Right=Parent=NULL;col='\0';}
-    RBTMapNode(Comparable *Key,T *Data,RBTMapNode *Left,RBTMapNode *Right,RBTMapNode *Parent, char Colour)
-    :Key(Key),Data(Data),Left(Left),Right(Right),Parent(Parent),col(Colour){}
-    RBTMapNode(Comparable *Key,T *Data):Key(Key),Data(Data){Left=Right=Parent=NULL;col='B';}
+    RBTMapNode(){Key=NULL;Data=NULL;Left=Right=Parent=NULL;black=0;}
+    RBTMapNode(Comparable *Key,T *Data,RBTMapNode *Left,RBTMapNode *Right,RBTMapNode *Parent, bool black)
+    :Key(Key),Data(Data),Left(Left),Right(Right),Parent(Parent),black(black){}
+    RBTMapNode(Comparable *Key,T *Data):Key(Key),Data(Data){Left=Right=Parent=NULL;black=0;}
     ~RBTMapNode(){delete Key,Left=Right=Parent=NULL;}
     
     Comparable *Key;
     T *Data;
     RBTMapNode *Left,*Right,*Parent;
 
-    char col;
+    bool black;
     
 };
 

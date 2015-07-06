@@ -248,14 +248,19 @@ protected:
     NodeType*           Smallest(NodeType *Root);
     NodeType*           Search(Comparable *Key);
     bool                isLeftChild(NodeType *Root);
-    void                InsertFix(NodeType *Root){};
-    void                DeleteFix(NodeType *Root){};
+    
+    /* Following 5 functions only used in RBTs */
+    virtual void        InsertFixRight(NodeType *toInsert)=0;
+    virtual void        DeleteFixRight(NodeType *toDelete,NodeType *Replacement)=0;
+    virtual void        InsertFixLeft(NodeType *toInsert)=0;
+    virtual void        DeleteFixLeft(NodeType *toDelete,NodeType *Replacement)=0;
+    virtual NodeType*   Sentinel(NodeType* Parent)=0;
     
     /* To be Defined in Derived Classes */
     virtual void        Swap(NodeType *Node1, NodeType *Node2)=0;
     
     /* Node Accessors, To be Defined in Derived Classes */
-    virtual             Comparable *GetNodeKey(NodeType *Node)=0;
+    virtual Comparable* GetNodeKey(NodeType *Node)=0;
     virtual NodeType*   GetLeftChild(NodeType *Node)=0;
     virtual void        SetLeftChild(NodeType *Node,NodeType *Child)=0;
     virtual NodeType*   GetRightChild(NodeType *Node)=0;
@@ -280,6 +285,20 @@ public:
     
 protected:
     
+/*             Avoid next 5 functions! They are only effectively used in RBT       */
+/**/void                    InsertFixRight(TreeNode<Comparable> *toInserted){};  
+/**/                                                                             
+/**/void                    DeleteFixRight(TreeNode<Comparable> *toDelete,       
+/**/                                       TreeNode<Comparable> *Replacement){}; 
+/**/                                                                             
+/**/void                    InsertFixLeft(TreeNode<Comparable> *toInserted){};   
+/**/                                                                             
+/**/void                    DeleteFixLeft(TreeNode<Comparable> *toDelete,        
+/**/                                       TreeNode<Comparable> *Replacement){}; 
+/**/                                                                             
+/**/TreeNode<Comparable>*   Sentinel(TreeNode<Comparable>* Parent){return NULL;}
+/*                                                                                 */
+    
     void                    Swap(TreeNode<Comparable> *Node1,
                                  TreeNode<Comparable> *Node2);
     
@@ -303,7 +322,7 @@ protected:
 
 /*
     Binary Search Tree Map(Dictionary)
-    Links Keys with Data.
+    Associates Keys with Data.
  */
 
 template<class Comparable,class T>
@@ -324,8 +343,24 @@ public:
     
 protected:
     
+/*          Avoid next 5 functions! They are only effectively used in RBT        */
+/**/void                    InsertFixRight(TreeMapNode<Comparable, T> *Inserted){};
+/**/
+/**/void                    DeleteFixRight(TreeMapNode<Comparable, T> *toDelete,
+/**/                                      TreeMapNode<Comparable, T> *Replacement){};
+/**/
+/**/void                    InsertFixLeft(TreeMapNode<Comparable, T> *toInserted){};
+/**/
+/**/void                    DeleteFixLeft(TreeMapNode<Comparable, T> *toDelete,
+/**/                                      TreeMapNode<Comparable, T> *Replacement){};
+/**/
+/**/TreeMapNode<Comparable, T>* Sentinel(TreeMapNode<Comparable, T> *Parent){
+/**/                                                               return NULL;}
+/*                                                                               */
+    
     void                        Swap(TreeMapNode<Comparable, T> *Node1,
                                      TreeMapNode<Comparable, T> *Node2);
+
     
     Comparable*                 GetNodeKey(TreeMapNode<Comparable, T> *Node);
     
@@ -344,6 +379,125 @@ protected:
     void                        SetParent(TreeMapNode<Comparable, T> *Node,
                                           TreeMapNode<Comparable, T> *Parent);
 };
+
+/*
+    Red Black Tree
+ 
+    Guarantees that Tree is Balanced at all times.
+ */
+
+template<class Comparable>
+class RBTree: public ABCtree<Comparable, RBTNode<Comparable>>{
+public:
+    RBTree(){this->Root=NULL;}
+    ~RBTree(){this->Reset();}
+    
+protected:
+    void                    InsertFixRight(RBTNode<Comparable> *Inserted);
+    
+    void                    DeleteFixRight(RBTNode<Comparable> *toDelete,
+                                           RBTNode<Comparable> *Replacement);
+    
+    void                    InsertFixLeft(RBTNode<Comparable> *Inserted);
+    
+    void                    DeleteFixLeft(RBTNode<Comparable> *toDelete,
+                                           RBTNode<Comparable> *Replacement);
+    
+    RBTNode<Comparable>*    Sentinel(RBTNode<Comparable> *Parent);
+    
+    void                    Swap(RBTNode<Comparable> *Node1,
+                                 RBTNode<Comparable> *Node2);
+    
+    Comparable*             GetNodeKey(RBTNode<Comparable> *Node);
+    
+    RBTNode<Comparable>*    GetLeftChild(RBTNode<Comparable> *Node);
+    
+    void                    SetLeftChild(RBTNode<Comparable> *Node,
+                                         RBTNode<Comparable> *Child);
+    
+    RBTNode<Comparable>*    GetRightChild(RBTNode<Comparable> *Node);
+    
+    void                    SetRightChild(RBTNode<Comparable> *Node,
+                                          RBTNode<Comparable> *Child);
+    
+    RBTNode<Comparable>*    GetParent(RBTNode<Comparable> *Node);
+    
+    void                    SetParent(RBTNode<Comparable> *Node,
+                                      RBTNode<Comparable> *Parent);
+    
+    void                    InsertCase1(RBTNode<Comparable>     *Node);
+    void                    InsertCase2(RBTNode<Comparable>     *Node);
+    void                    InsertCase3(RBTNode<Comparable>     *Node);
+    void                    InsertCase1m(RBTNode<Comparable>    *Node);
+    void                    InsertCase2m(RBTNode<Comparable>    *Node);
+    void                    InsertCase3m(RBTNode<Comparable>    *Node);
+    
+    void                    DeleteCase1(RBTNode<Comparable>     *Node);
+    void                    DeleteCase2(RBTNode<Comparable>     *Node);
+    void                    DeleteCase3(RBTNode<Comparable>     *Node);
+    void                    DeleteCase4(RBTNode<Comparable>     *Node);
+    void                    DeleteCase1m(RBTNode<Comparable>    *Node);
+    void                    DeleteCase2m(RBTNode<Comparable>    *Node);
+    void                    DeleteCase3m(RBTNode<Comparable>    *Node);
+    void                    DeleteCase4m(RBTNode<Comparable>    *Node);
+    
+    
+};
+
+/*
+    Red Black Tree Dictionary
+ 
+    Guarantees that Tree is Balanced at all times.
+ */
+
+//template<class Comparable, class T>
+//class RBTreeMap: public ABCtree<Comparable, RBTMapNode<Comparable, T>>{
+//public:
+//    RBTreeMap(){this->Root=NULL;}
+//    ~RBTreeMap(){this->Reset();}
+//    
+//    /* Input Key with Linked Data */
+//    void                        Insert(Comparable *Key, T *Data);
+//    
+//    /* Maps to the Linked Data of Selected Key */
+//    T*                          Extract(Comparable *Key);
+//    
+//    /* Overrides Selected Key's Data with new Data */
+//    void                        Edit(Comparable *Key, T *Data);
+//    
+//protected:
+//    
+//    void                    InsertFixRight(RBTMapNode<Comparable, T> *toInserted);
+//    
+//    void                    DeleteFixRight(RBTMapNode<Comparable, T> *toDelete,
+//                                           RBTMapNode<Comparable, T> *Replacement);
+//    void                    InsertFixLeft(RBTMapNode<Comparable, T> *toInserted);
+//    
+//    void                    DeleteFixLeft(RBTMapNode<Comparable, T> *toDelete,
+//                                           RBTMapNode<Comparable, T> *Replacement);
+//    
+//    RBTMapNode<Comparable, T>*  Sentinel(RBTMapNode<Comparable, T> *Parent);
+//    
+//    void                    Swap(RBTMapNode<Comparable, T> *Node1,
+//                                 RBTMapNode<Comparable, T> *Node2);
+//    
+//    Comparable*             GetNodeKey(RBTMapNode<Comparable, T> *Node);
+//    
+//    RBTMapNode<Comparable, T>*   GetLeftChild(RBTMapNode<Comparable, T> *Node);
+//    
+//    void                    SetLeftChild(RBTMapNode<Comparable, T> *Node,
+//                                         RBTMapNode<Comparable, T> *Child);
+//    
+//    RBTMapNode<Comparable, T>*   GetRightChild(RBTMapNode<Comparable, T> *Node);
+//    
+//    void                    SetRightChild(RBTMapNode<Comparable, T> *Node,
+//                                          RBTMapNode<Comparable, T> *Child);
+//    
+//    RBTMapNode<Comparable, T>*   GetParent(RBTMapNode<Comparable, T> *Node);
+//    
+//    void                    SetParent(RBTMapNode<Comparable, T> *Node,
+//                                      RBTMapNode<Comparable, T> *Parent);
+//};
 
 #include "adt.cpp"
 #endif /* ADT_H */

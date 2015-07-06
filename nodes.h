@@ -64,5 +64,36 @@ public:
     TreeMapNode *Left,*Right,*Parent;
 };
 
+/* Red Black Tree Node */
+template<class Comparable> class RBTNode{
+public:
+    RBTNode(){Key=NULL;Left=Right=Parent=NULL;col='\0';}
+    RBTNode(Comparable *Key,RBTNode *Left,RBTNode *Right,RBTNode *Parent, char Colour)
+    :Key(Key),Left(Left),Right(Right),Parent(Parent),col(Colour){}
+    RBTNode(Comparable *Key):Key(Key){Left=Right=Parent=NULL;col='B';}
+    ~RBTNode(){delete Key,Left=Right=Parent=NULL;}
+    
+    Comparable *Key;
+    RBTNode *Left,*Right,*Parent;
+    char col;
+};
+
+/* Red Black Tree Dictionary Node */
+template<class Comparable, class T> class RBTMapNode{
+public:
+    RBTMapNode(){Key=NULL;Data=NULL;Left=Right=Parent=NULL;col='\0';}
+    RBTMapNode(Comparable *Key,T *Data,RBTMapNode *Left,RBTMapNode *Right,RBTMapNode *Parent, char Colour)
+    :Key(Key),Data(Data),Left(Left),Right(Right),Parent(Parent),col(Colour){}
+    RBTMapNode(Comparable *Key,T *Data):Key(Key),Data(Data){Left=Right=Parent=NULL;col='B';}
+    ~RBTMapNode(){delete Key,Left=Right=Parent=NULL;}
+    
+    Comparable *Key;
+    T *Data;
+    RBTMapNode *Left,*Right,*Parent;
+
+    char col;
+    
+};
+
 #include "nodes.cpp"
 #endif /* NODES_H */

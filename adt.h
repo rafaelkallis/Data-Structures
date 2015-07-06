@@ -248,6 +248,8 @@ protected:
     NodeType*           Smallest(NodeType *Root);
     NodeType*           Search(Comparable *Key);
     bool                isLeftChild(NodeType *Root);
+    void                InsertFix(NodeType *Root){};
+    void                DeleteFix(NodeType *Root){};
     
     /* To be Defined in Derived Classes */
     virtual void        Swap(NodeType *Node1, NodeType *Node2)=0;

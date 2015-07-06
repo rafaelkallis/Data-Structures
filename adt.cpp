@@ -156,7 +156,7 @@ void ABCtree<Comparable,NodeType>::Insert(Comparable *Key){
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
     /* Defining Temporary Pointers to Reduce Function Calling Overload*/
-    NodeType *toDelete=this->Search(Key);
+    NodeType *toDelete=this->Search(Key),*Replace=NULL;
     NodeType *LeftChild=GetLeftChild(toDelete);
     NodeType *RightChild=GetRightChild(toDelete);
     NodeType *Parent=GetParent(toDelete);
@@ -166,19 +166,19 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
     if(!toDelete) return;
     
     /* Node is Root, has no Children */
-    else if(!LeftChild && !RightChild && !Parent)
+    else if(!LeftChild && !RightChild && !Parent){
         this->Root=NULL;
     
     /* Node has no Children, is a Left Child */
-    else if(!LeftChild && !RightChild && isaLeftChild)
+    }else if(!LeftChild && !RightChild && isaLeftChild){
         SetLeftChild(Parent,NULL);
     
     /* Node has no Children, is a Right Child */
-    else if(!LeftChild && !RightChild && !isaLeftChild)
+    }else if(!LeftChild && !RightChild && !isaLeftChild){
         SetRightChild(Parent,NULL);
     
     /* Node has only a Left Child, is a Left Child */
-    else if(LeftChild && !RightChild && isaLeftChild){
+    }else if(LeftChild && !RightChild && isaLeftChild){
         SetLeftChild(Parent, LeftChild);
         SetParent(LeftChild,Parent);
         
@@ -214,6 +214,7 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
         }
         toDelete=Temp;
     }
+    //this->DeleteFix(toDelete)
     delete toDelete;
     toDelete=NULL;
 }
@@ -250,6 +251,7 @@ void ABCtree<Comparable,NodeType>::Insert(NodeType *Node){
         else SetRightChild(Follow,Node);
         SetParent(Node, Follow);
     }
+    this->InsertFix(Node);
 }
 
 template<class Comparable,class NodeType>

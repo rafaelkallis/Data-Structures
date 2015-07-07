@@ -25,6 +25,11 @@ struct ReallocException:public std::exception{
     
 };
 
+/* Used primarily in Trees, used when operation on node involves
+    operation to parent pointer with NULL value */
+struct NoParentException:public std::exception{
+    
+};
 
 /* General Exception */
 struct UncaughtException:public std::exception{

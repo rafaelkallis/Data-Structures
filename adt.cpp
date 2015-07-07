@@ -153,10 +153,11 @@ void ABCtree<Comparable,NodeType>::Insert(Comparable *Key){
     Insert(new NodeType(Key));
 }
 
+#warning Fix: Delete functions
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
     /* Defining Temporary Pointers to Reduce Function Calling Overload*/
-    NodeType *toDelete=this->Search(Key),*Replace=NULL;
+    NodeType *toDelete=this->Search(Key);
     NodeType *LeftChild=GetLeftChild(toDelete);
     NodeType *RightChild=GetRightChild(toDelete);
     NodeType *Parent=GetParent(toDelete);
@@ -173,36 +174,36 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
     /* Node has no Children, is a Left Child */
     }else if(!LeftChild && !RightChild && isaLeftChild){
         SetLeftChild(Parent,NULL);
-        DeleteFixLeft(toDelete, Sentinel(Parent));
+        //DeleteFixLeft(toDelete, Sentinel(Parent));
         
     /* Node has no Children, is a Right Child */
     }else if(!LeftChild && !RightChild && !isaLeftChild){
         SetRightChild(Parent,NULL);
-        DeleteFixRight(toDelete, Sentinel(Parent));
+       // DeleteFixRight(toDelete, Sentinel(Parent));
         
     /* Node has only a Left Child, is a Left Child */
     }else if(LeftChild && !RightChild && isaLeftChild){
         SetLeftChild(Parent, LeftChild);
         SetParent(LeftChild,Parent);
-        DeleteFixLeft(toDelete, LeftChild);
+        //DeleteFixLeft(toDelete, LeftChild);
         
         /* Node has only a Right Child, is a Left Child */
     }else if(!LeftChild && RightChild && isaLeftChild){
         SetLeftChild(Parent, RightChild);
         SetParent(RightChild, Parent);
-        DeleteFixLeft(toDelete, RightChild);
+        //DeleteFixLeft(toDelete, RightChild);
         
         /* Node has only a Left Child, is a Right Child */
     }else if(LeftChild && !RightChild && !isaLeftChild){
         SetRightChild(Parent, LeftChild);
         SetParent(LeftChild, Parent);
-        DeleteFixRight(toDelete, LeftChild);
+        //DeleteFixRight(toDelete, LeftChild);
         
         /* Node has only a Right Child, is a Right Child */
     }else if(!LeftChild && RightChild && !isaLeftChild){
         SetRightChild(Parent, RightChild);
         SetParent(RightChild, Parent);
-        DeleteFixRight(toDelete, RightChild);
+        //DeleteFixRight(toDelete, RightChild);
         
         /* Node has 2 Children */
     }else{
@@ -220,8 +221,8 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
                 SetParent(GetRightChild(Temp), GetParent(Temp));
         }
         toDelete=Temp;
-        if(GetRightChild(toDelete)) DeleteFixLeft(toDelete, GetRightChild(toDelete));
-        else DeleteFixLeft(toDelete, Sentinel(GetParent(toDelete)));
+        //if(GetRightChild(toDelete)) DeleteFixLeft(toDelete, GetRightChild(toDelete));
+        //else DeleteFixLeft(toDelete, Sentinel(GetParent(toDelete)));
         
     }
     delete toDelete;
@@ -242,13 +243,15 @@ void ABCtree<Comparable,NodeType>::PrintInOrder(){
 
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::PrintGraph(){
-    this->PrintGraph(Root);
+    PrintGraph(this->Root);
 }
 
 template<class Comparable,class NodeType>
 void ABCtree<Comparable,NodeType>::Insert(NodeType *Node){
-    if(!this->Root)this->Root=Node; //FIXME: set colour to black
-    else{
+    if(!this->Root){
+        this->Root=Node;
+        InsertFix(Node, 0); /* second argument (0) is symbolic */
+    }else{
         NodeType *Temp,*Follow;Temp=Follow=this->Root;
         while(Temp){
             Follow=Temp;
@@ -258,11 +261,11 @@ void ABCtree<Comparable,NodeType>::Insert(NodeType *Node){
         if(*GetNodeKey(Node) < *GetNodeKey(Follow)){
             SetLeftChild(Follow,Node);
             SetParent(Node, Follow);
-            InsertFixLeft(Node);
+            InsertFix(Node, 1);
         }else{
             SetRightChild(Follow,Node);
             SetParent(Node, Follow);
-            InsertFixRight(Node);
+            InsertFix(Node, 0);
         }
     }
 }
@@ -298,6 +301,7 @@ void ABCtree<Comparable,NodeType>::PrintGraph(NodeType *Root){
         PrintGraph(GetRightChild(Root));
     }
 }
+
 template<class Comparable,class NodeType>
 NodeType* ABCtree<Comparable,NodeType>::Smallest(NodeType *Root){
     if(GetLeftChild(Root))return Smallest(GetLeftChild(Root));
@@ -317,9 +321,10 @@ NodeType* ABCtree<Comparable,NodeType>::Search(Comparable *Key){
 
 template<class Comparable,class NodeType>
 bool ABCtree<Comparable,NodeType>::isLeftChild(NodeType *Root){
-    if(!Root || !GetParent(Root) || !GetLeftChild(GetParent(Root)))return false;
-    else if(GetLeftChild(GetParent(Root)) == Root) return true;
-    else return false;
+    if(!Root) throw UncaughtException();
+    else if(!GetParent(Root)) throw NoParentException();
+    else if(GetLeftChild(GetParent(Root)) != Root) return false;
+    else return true;
 }
 
 /*
@@ -455,54 +460,90 @@ void TreeMap<Comparable, T>::SetParent(TreeMapNode<Comparable, T> *Node, TreeMap
     Red Black Tree
 */
 
-//template<class Comparable>
-//void RBTree<Comparable>::InsertFixRight(RBTNode<Comparable> *Inserted){
-//    
-//    /* Inserted Node is Root > Set Colour to Black */
-//    if(Inserted==this->Root){ Inserted->Black=1; return;
-//    
-//    /* If parent of Inserted is black > Nothing to do! */
-//    }else if(GetParent(Inserted)->black) return;
-//    
-//    RBTNode<Comparable> Uncle;
-//    if(this->isLeftChild(GetParent(Inserted)))
-//            Uncle=GetRightChild(GetParent(GetParent(Inserted)));
-//    else    Uncle=GetLeftChild(GetParent(GetParent(Inserted)));
-//    
-//    bool isParentLeftChild=this->isLeftChild(Parent);
-//    bool pBlack=GetParent(Inserted)->black;
-//    bool gBlack=GetParent(GetParent(Inserted));
-//    bool uBlack;
-//    if(!Uncle)uBlack=1; else uBlack=Uncle->black;
-//        
-//    /* Parent is Left Child & Uncle is Red > Case 1 */
-//    if((isParentLeftChild && !uBlack){
-//            
-//    /* Parent is Right Child & Uncle is Red > Case 1m */
-//    }else if(!isParentLeftChild && !uBlack){
-//               
-//    }else if(this->isLeftChild(Parent) && !GetRightChild(<#RBTNode<Comparable> *Node#>))
-//    }
-//}
-
 template<class Comparable>
-void RBTree<Comparable>::DeleteFixRight(RBTNode<Comparable> *toDelete, RBTNode<Comparable> *Replacement){
-    
+void RBTree<Comparable>::PrintGraph(){
+    PrintGraph(this->Root);
 }
 
 template<class Comparable>
-void RBTree<Comparable>::InsertFixLeft(RBTNode<Comparable> *Inserted){
+void RBTree<Comparable>::InsertFix(RBTNode<Comparable> *Inserted, bool isInsertedLeftChild){
     
+    /* Inserted Node is Root > Set Colour to Black */
+    if(Inserted==this->Root){
+        Inserted->black=1;
+        return;
+    
+    /* If parent of Inserted is black > Nothing to do! */
+    }else if(GetParent(Inserted)->black){
+        return;
+        
+    }else{
+        RBTNode<Comparable> *Uncle;
+        
+        /* NoParentException Impossible to Occur */
+        if(this->isLeftChild(GetParent(Inserted)))
+                Uncle=GetRightChild(GetParent(GetParent(Inserted)));
+        else    Uncle=GetLeftChild(GetParent(GetParent(Inserted)));
+        
+        /* Uncle: Red */
+        if(Uncle && !Uncle->black){
+            InsertCase1(Inserted, Uncle);
+            
+        /* Inserted: Right Child & Parent: Left Child & Uncle: Black > Case2 */
+        }else if(!isInsertedLeftChild && this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase2(Inserted,Uncle);
+          
+        /* Inserted: Left Child & Parent: Right Child & Uncle: Black > Case2m */
+        }else if(isInsertedLeftChild && !this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase2m(Inserted,Uncle);
+
+        /* Inserted: Left Child & Parent: Left Child & Uncle: Black > Case3 */
+        }else if(isInsertedLeftChild && this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase3(Inserted,Uncle);
+
+        /* Inserted: Left Child & Parent: Right Child & Uncle is Black > Case 3m */
+        }else if(!isInsertedLeftChild && !this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase3m(Inserted,Uncle);
+            
+        }else{
+            throw UncaughtException();
+        }
+    }
 }
 
 template<class Comparable>
-void RBTree<Comparable>::DeleteFixLeft(RBTNode<Comparable> *toDelete, RBTNode<Comparable> *Replacement){
+void RBTree<Comparable>::DeleteFix(RBTNode<Comparable> *toDelete, RBTNode<Comparable> *Replacement){
     
 }
 
 template<class Comparable>
 RBTNode<Comparable>* RBTree<Comparable>::Sentinel(RBTNode<Comparable> *Parent){
     return new RBTNode<Comparable>(NULL,NULL,NULL,Parent,'B');
+}
+
+template<class Comparable>
+void RBTree<Comparable>::PrintGraph(RBTNode<Comparable> *Root){
+    if(Root){
+        if(!GetLeftChild(Root))printf("(x)");
+        else if(GetLeftChild(Root)->black)
+            std::cout<<"("<<*GetNodeKey(GetLeftChild(Root))<<")";
+        else
+            std::cout<<"["<<*GetNodeKey(GetLeftChild(Root))<<"]";
+        
+        if(Root->black)
+            std::cout<<" <--- ("<<*GetNodeKey(Root)<<") ---> ";
+        else
+            std::cout<<" <--- ["<<*GetNodeKey(Root)<<"] ---> ";
+        
+        if(!GetRightChild(Root))printf("(x)\n\n");
+        else if(GetRightChild(Root)->black)
+            std::cout<<"("<<*GetNodeKey(GetRightChild(Root))<<")\n\n";
+        else
+            std::cout<<"["<<*GetNodeKey(GetRightChild(Root))<<"]\n\n";
+
+        PrintGraph(GetLeftChild(Root));
+        PrintGraph(GetRightChild(Root));
+    }
 }
 
 template<class Comparable>
@@ -549,33 +590,75 @@ void RBTree<Comparable>::SetParent(RBTNode<Comparable> *Node, RBTNode<Comparable
 }
 
 template<class Comparable>
-void RBTree<Comparable>::InsertCase1(RBTNode<Comparable> *Node){
+void RBTree<Comparable>::LeftRotate(RBTNode<Comparable> *Node){
+    RBTNode<Comparable> *Temp=GetRightChild(Node);
     
+    SetRightChild(Node, GetLeftChild(Temp));
+    if(GetLeftChild(Temp))SetParent(GetLeftChild(Temp), Node);
+    SetParent(Temp, GetParent(Node));
+    if(!GetParent(Node))this->Root=Temp;
+    else if(this->isLeftChild(Node))SetLeftChild(GetParent(Node), Temp);
+    else SetRightChild(GetParent(Node), Temp);
+    SetLeftChild(Temp, Node);
+    SetParent(Node, Temp);
 }
 
 template<class Comparable>
-void RBTree<Comparable>::InsertCase2(RBTNode<Comparable> *Node){
+void RBTree<Comparable>::RightRotate(RBTNode<Comparable> *Node){
+    RBTNode<Comparable> *Temp=GetLeftChild(Node);
     
+    SetLeftChild(Node, GetRightChild(Temp));
+    if(GetRightChild(Temp))SetParent(GetRightChild(Temp), Node);
+    SetParent(Temp, GetParent(Node));
+    if(!GetParent(Node))this->Root=Temp;
+    else if(this->isLeftChild(Node))SetLeftChild(GetParent(Node), Temp);
+    else SetRightChild(GetParent(Node), Temp);
+    SetRightChild(Temp, Node);
+    SetParent(Node, Temp);
+}
+
+/* Uncle: Red */
+template<class Comparable>
+void RBTree<Comparable>::InsertCase1(RBTNode<Comparable> *Node,RBTNode<Comparable> *Uncle){
+    GetParent(Node)->black=1;
+    Uncle->black=1;
+    RBTNode<Comparable> *GrandParent=GetParent(GetParent(Node));
+    if(this->Root!=GrandParent){
+        GrandParent->black=0;
+        try{
+            InsertFix(GrandParent, this->isLeftChild(GrandParent));
+        }catch (NoParentException e){
+            if(GrandParent==this->Root)GrandParent->black=1;
+            else throw UncaughtException();
+        }
+    }
+}
+
+/* Uncle: Black & Node: Right Child */
+template<class Comparable>
+void RBTree<Comparable>::InsertCase2(RBTNode<Comparable> *Node,RBTNode<Comparable> *Uncle){
+    LeftRotate(GetParent(Node));            /* Parent */
+    InsertCase3(GetLeftChild(Node), Uncle); /* Parent takes place of Node  */
 }
 
 template<class Comparable>
-void RBTree<Comparable>::InsertCase3(RBTNode<Comparable> *Node){
-    
+void RBTree<Comparable>::InsertCase3(RBTNode<Comparable> *Node,RBTNode<Comparable> *Uncle){
+    GetParent(Node)->black=1;                   /* Parent */
+    GetParent(GetParent(Node))->black=0;        /* Grandparent */
+    RightRotate(GetParent(GetParent(Node)));    /* GrandParent */
 }
 
 template<class Comparable>
-void RBTree<Comparable>::InsertCase1m(RBTNode<Comparable> *Node){
-    
+void RBTree<Comparable>::InsertCase2m(RBTNode<Comparable> *Node,RBTNode<Comparable> *Uncle){
+    RightRotate(GetParent(Node));
+    InsertCase3m(GetRightChild(Node), Uncle);
 }
 
 template<class Comparable>
-void RBTree<Comparable>::InsertCase2m(RBTNode<Comparable> *Node){
-    
-}
-
-template<class Comparable>
-void RBTree<Comparable>::InsertCase3m(RBTNode<Comparable> *Node){
-    
+void RBTree<Comparable>::InsertCase3m(RBTNode<Comparable> *Node,RBTNode<Comparable> *Uncle){
+    GetParent(Node)->black=1;                   /* Parent */
+    GetParent(GetParent(Node))->black=0;        /* Grandparent */
+    LeftRotate(GetParent(GetParent(Node)));     /* GrandParent */
 }
 
 template<class Comparable>

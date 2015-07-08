@@ -543,13 +543,7 @@ void RBTree<Comparable>::InsertFix(RBTNode<Comparable> *Inserted, bool isInserte
 
 template<class Comparable>
 void RBTree<Comparable>::DeleteFix(RBTNode<Comparable> *Replacement, bool isReplacementLeftChild){
-    /*RBTNode<Comparable> *Parent=GetParent(Replacement);
-    RBTNode<Comparable> *Sibling;
-    if(isReplacementLeftChild)Sibling=GetRightChild(Parent);
-    else Sibling=GetLeftChild(Parent);
-#warning maybe exception occurs in nephew, better make bool values
-    RBTNode<Comparable> *SiblingRightChild=GetRightChild(Sibling);
-    RBTNode<Comparable> *SiblingLeftChild=GetLeftChild(Sibling);*/
+
     bool isParentBlack=GetParent(Replacement)->black;
     bool isSiblingBlack;
     bool isLeftNephewBlack;
@@ -854,4 +848,363 @@ void RBTree<Comparable>::DeleteCase4m(RBTNode<Comparable> *Node){
     GetLeftChild(GetLeftChild(GetParent(Node)))->black=1;       /* Right Nephew */
     RightRotate(GetParent(Node));                               /* Parent */
 }
+
+/*
+    Red Black Tree Map
+ */
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::InsertFix(RBTMapNode<Comparable, T> *Inserted, bool isInsertedLeftChild){
+    
+    /* Inserted Node is Root > Set Colour to Black */
+    if(Inserted==this->Root){
+        Inserted->black=1;
+        return;
+        
+        /* If parent of Inserted is black > Case0 (Nothing to Do!) */
+    }else if(GetParent(Inserted)->black){
+        return;
+        
+    }else{
+        RBTMapNode<Comparable, T> *Uncle;
+        
+        /* NoParentException Impossible to Occur */
+        if(this->isLeftChild(GetParent(Inserted)))
+            Uncle=GetRightChild(GetParent(GetParent(Inserted)));
+        else    Uncle=GetLeftChild(GetParent(GetParent(Inserted)));
+        
+        /* Uncle: Red */
+        if(Uncle && !Uncle->black){
+            InsertCase1(Inserted, Uncle);
+            
+            /* Inserted: Right Child & Parent: Left Child & Uncle: Black > Case2 */
+        }else if(!isInsertedLeftChild && this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase2(Inserted,Uncle);
+            
+            /* Inserted: Left Child & Parent: Right Child & Uncle: Black > Case2m */
+        }else if(isInsertedLeftChild && !this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase2m(Inserted,Uncle);
+            
+            /* Inserted: Left Child & Parent: Left Child & Uncle: Black > Case3 */
+        }else if(isInsertedLeftChild && this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase3(Inserted,Uncle);
+            
+            /* Inserted: Left Child & Parent: Right Child & Uncle is Black > Case 3m */
+        }else if(!isInsertedLeftChild && !this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
+            InsertCase3m(Inserted,Uncle);
+            
+        }else{
+            throw UncaughtException();
+        }
+    }
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteFix(RBTMapNode<Comparable, T> *Replacement, bool isReplacementLeftChild){
+    
+    bool isParentBlack=GetParent(Replacement)->black;
+    bool isSiblingBlack;
+    bool isLeftNephewBlack;
+    bool isRightNephewBlack;
+    if(isReplacementLeftChild){
+        isSiblingBlack=GetRightChild(GetParent(Replacement))->black;
+        isLeftNephewBlack=!GetLeftChild(GetRightChild(GetParent(Replacement))) ||
+        GetLeftChild(GetRightChild(GetParent(Replacement)))->black;
+        isRightNephewBlack=!GetRightChild(GetRightChild(GetParent(Replacement))) ||
+        GetRightChild(GetRightChild(GetParent(Replacement)))->black;
+    }else{
+        isSiblingBlack=GetLeftChild(GetParent(Replacement))->black;
+        isLeftNephewBlack=!GetLeftChild(GetLeftChild(GetParent(Replacement))) ||
+        GetLeftChild(GetLeftChild(GetParent(Replacement)))->black;
+        isRightNephewBlack=!GetRightChild(GetLeftChild(GetParent(Replacement))) ||
+        GetRightChild(GetLeftChild(GetParent(Replacement)))->black;
+    }
+    
+    
+    /* Replacement: Left Child & Parent: Black & Sibling: Red */
+    /* & SiblingRightCh: Black & SiblingLeftCh: Black > Case1 */
+    if(isReplacementLeftChild && isParentBlack && !isSiblingBlack
+       && isRightNephewBlack && isLeftNephewBlack){
+        DeleteCase1(Replacement);
+        
+        /* Replacement: Right Child & Parent: Black & Sibling: Red */
+        /* & SiblingRightCh: Black & SiblingLeftCh: Black > Case1m */
+    }else if(!isReplacementLeftChild && isParentBlack && !isSiblingBlack
+             && isRightNephewBlack && isLeftNephewBlack){
+        DeleteCase1m(Replacement);
+        
+        /* Replacement: LeftChild & Sibling: Black & SiblingLeftCh: Black */
+        /* & SiblingRightCh: Black > Case 2 */
+    }else if(isReplacementLeftChild && isSiblingBlack && isRightNephewBlack
+             && isLeftNephewBlack){
+        DeleteCase2(Replacement);
+        
+        /* Replacement: Right Child & Sibling: Black & SiblingLeftCh: Black */
+        /* & SiblingRightCh: Black > Case 2m */
+    }else if(!isReplacementLeftChild && isSiblingBlack && isRightNephewBlack
+             && isLeftNephewBlack){
+        DeleteCase2m(Replacement);
+        
+        /* Replacement: LeftChild & Sibling: Black & SiblingLeftCh: Red */
+        /* & SiblingRightCh: Black > Case 3 */
+    }else if(isReplacementLeftChild && isSiblingBlack && !isLeftNephewBlack
+             && isRightNephewBlack){
+        DeleteCase3(Replacement);
+        
+        /* Replacement: Right Child & Sibling: Black & SiblingLeftCh: Black */
+        /* & SiblingRightCh: Red > Case 3m */
+    }else if(!isReplacementLeftChild && isSiblingBlack && isLeftNephewBlack
+             && !isRightNephewBlack){
+        DeleteCase3m(Replacement);
+        
+        /* Replacement: Left Child & Sibling: Black */
+        /* & SiblingRightCh: Red > Case 4 */
+    }else if(isReplacementLeftChild && isSiblingBlack && !isRightNephewBlack){
+        DeleteCase4(Replacement);
+        
+        /* Replacement: Left Child & Sibling: Black */
+        /* & SiblingLeftCh: Red > Case 4m */
+    }else if(!isReplacementLeftChild && isSiblingBlack && !isLeftNephewBlack){
+        DeleteCase4m(Replacement);
+        
+    }else{
+        throw UncaughtException();
+    }
+    
+    /* Check if Replacement is a Sentinel */
+    if(!GetNodeKey(Replacement) && !GetLeftChild(Replacement) && !GetRightChild(Replacement))
+        delete Replacement;
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::PrintGraph(RBTMapNode<Comparable, T> *Root){
+    if(Root){
+        if(!GetLeftChild(Root))printf("(x)");
+        else if(GetLeftChild(Root)->black)
+            std::cout<<"("<<*GetNodeKey(GetLeftChild(Root))<<")";
+        else
+            std::cout<<"["<<*GetNodeKey(GetLeftChild(Root))<<"]";
+        
+        if(Root->black)
+            std::cout<<" <--- ("<<*GetNodeKey(Root)<<") ---> ";
+        else
+            std::cout<<" <--- ["<<*GetNodeKey(Root)<<"] ---> ";
+        
+        if(!GetRightChild(Root))printf("(x)\n\n");
+        else if(GetRightChild(Root)->black)
+            std::cout<<"("<<*GetNodeKey(GetRightChild(Root))<<")\n\n";
+        else
+            std::cout<<"["<<*GetNodeKey(GetRightChild(Root))<<"]\n\n";
+        
+        PrintGraph(GetLeftChild(Root));
+        PrintGraph(GetRightChild(Root));
+    }
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::Swap(RBTMapNode<Comparable, T> *Node1, RBTMapNode<Comparable, T> *Node2){
+    if(!Node1 || !Node2) throw UncaughtException();
+    Comparable *Temp=Node1->Key;
+    Node1->Key=Node2->Key;
+    Node2->Key=Temp;
+}
+
+template<class Comparable, class T>
+Comparable* RBTreeMap<Comparable, T>::GetNodeKey(RBTMapNode<Comparable, T> *Node){
+    return Node->Key;
+}
+
+template<class Comparable, class T>
+RBTMapNode<Comparable, T>* RBTreeMap<Comparable, T>::GetLeftChild(RBTMapNode<Comparable, T> *Node){
+    return Node->Left;
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::SetLeftChild(RBTMapNode<Comparable, T> *Node, RBTMapNode<Comparable, T> *Child){
+    Node->Left=Child;
+}
+
+template<class Comparable, class T>
+RBTMapNode<Comparable, T>* RBTreeMap<Comparable, T>::GetRightChild(RBTMapNode<Comparable, T> *Node){
+    return Node->Right;
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::SetRightChild(RBTMapNode<Comparable, T> *Node, RBTMapNode<Comparable, T> *Child){
+    Node->Right=Child;
+}
+
+template<class Comparable, class T>
+RBTMapNode<Comparable, T>* RBTreeMap<Comparable, T>::GetParent(RBTMapNode<Comparable, T> *Node){
+    return Node->Parent;
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::SetParent(RBTMapNode<Comparable, T> *Node, RBTMapNode<Comparable, T> *Parent){
+    Node->Parent=Parent;
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::LeftRotate(RBTMapNode<Comparable, T> *Node){
+    RBTMapNode<Comparable, T> *Temp=GetRightChild(Node);
+    
+    SetRightChild(Node, GetLeftChild(Temp));
+    if(GetLeftChild(Temp))SetParent(GetLeftChild(Temp), Node);
+    SetParent(Temp, GetParent(Node));
+    if(!GetParent(Node))this->Root=Temp;
+    else if(this->isLeftChild(Node))SetLeftChild(GetParent(Node), Temp);
+    else SetRightChild(GetParent(Node), Temp);
+    SetLeftChild(Temp, Node);
+    SetParent(Node, Temp);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::RightRotate(RBTMapNode<Comparable, T> *Node){
+    RBTMapNode<Comparable, T> *Temp=GetLeftChild(Node);
+    
+    SetLeftChild(Node, GetRightChild(Temp));
+    if(GetRightChild(Temp))SetParent(GetRightChild(Temp), Node);
+    SetParent(Temp, GetParent(Node));
+    if(!GetParent(Node))this->Root=Temp;
+    else if(this->isLeftChild(Node))SetLeftChild(GetParent(Node), Temp);
+    else SetRightChild(GetParent(Node), Temp);
+    SetRightChild(Temp, Node);
+    SetParent(Node, Temp);
+}
+
+/* Uncle: Red */
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::InsertCase1(RBTMapNode<Comparable, T> *Node,RBTMapNode<Comparable, T> *Uncle){
+    GetParent(Node)->black=1;
+    Uncle->black=1;
+    RBTMapNode<Comparable, T> *GrandParent=GetParent(GetParent(Node));
+    if(this->Root!=GrandParent){
+        GrandParent->black=0;
+        try{
+            InsertFix(GrandParent, this->isLeftChild(GrandParent));
+        }catch (NoParentException e){
+            if(GrandParent==this->Root)GrandParent->black=1;
+            else throw UncaughtException();
+        }
+    }
+}
+
+/* Uncle: Black & Node: Right Child */
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::InsertCase2(RBTMapNode<Comparable, T> *Node,RBTMapNode<Comparable, T> *Uncle){
+    LeftRotate(GetParent(Node));            /* Parent */
+    InsertCase3(GetLeftChild(Node), Uncle); /* Parent takes place of Node  */
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::InsertCase3(RBTMapNode<Comparable, T> *Node,RBTMapNode<Comparable, T> *Uncle){
+    GetParent(Node)->black=1;                   /* Parent */
+    GetParent(GetParent(Node))->black=0;        /* Grandparent */
+    RightRotate(GetParent(GetParent(Node)));    /* GrandParent */
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::InsertCase2m(RBTMapNode<Comparable, T> *Node,RBTMapNode<Comparable, T> *Uncle){
+    RightRotate(GetParent(Node));
+    InsertCase3m(GetRightChild(Node), Uncle);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::InsertCase3m(RBTMapNode<Comparable, T> *Node,RBTMapNode<Comparable, T> *Uncle){
+    GetParent(Node)->black=1;                   /* Parent */
+    GetParent(GetParent(Node))->black=0;        /* Grandparent */
+    LeftRotate(GetParent(GetParent(Node)));     /* GrandParent */
+}
+
+
+/*
+ Delete Cases
+ */
+
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase1(RBTMapNode<Comparable, T> *Node){
+    GetRightChild(GetParent(Node))->black=1;    /* Sibling */
+    GetParent(Node)->black=0;                   /* Parent */
+    LeftRotate(GetParent(Node));                /* Parent */
+    DeleteFix(Node,1);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase2(RBTMapNode<Comparable, T> *Node){
+    GetRightChild(GetParent(Node))->black=0;                /* Sibling */
+    
+    /* if Parent is root, the tree is balanced */
+    if(GetParent(Node)==this->Root) return;                 /* Parent */
+    
+    /* if Parent is Red, set it to black to balance tree */
+    if(!GetParent(Node)->black){                            /* Parent */
+        GetParent(Node)->black=1;
+        return;
+    }
+    
+    /* Propagate problem upwards */
+    if(this->isLeftChild(GetParent(Node))) DeleteFix(GetParent(Node), 1);/*Parent*/
+    else DeleteFix(GetParent(Node), 0);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase3(RBTMapNode<Comparable, T> *Node){
+    GetLeftChild(GetRightChild(GetParent(Node)))->black=1;  /* Left Nephew */
+    GetRightChild(GetParent(Node))->black=0;                /* Sibling */
+    RightRotate(GetRightChild(GetParent(Node)));            /* Sibling */
+    DeleteCase4(Node);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase4(RBTMapNode<Comparable, T> *Node){
+    GetRightChild(GetParent(Node))->black=GetParent(Node)->black;/* Sibling, Parent */
+    GetParent(Node)->black=1;                               /* Parent */
+    GetRightChild(GetRightChild(GetParent(Node)))->black=1; /* Right Nephew */
+    LeftRotate(GetParent(Node));                            /* Parent */
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase1m(RBTMapNode<Comparable, T> *Node){
+    GetLeftChild(GetParent(Node))->black=1;     /* Sibling */
+    GetParent(Node)->black=0;                   /* Parent */
+    RightRotate(GetParent(Node));                /* Parent */
+    DeleteFix(Node,0);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase2m(RBTMapNode<Comparable, T> *Node){
+    GetLeftChild(GetParent(Node))->black=0;                /* Sibling */
+    
+    /* if Parent is root, the tree is balanced */
+    if(GetParent(Node)==this->Root) return;                 /* Parent */
+    
+    /* if Parent is Red, set it to black to balance tree */
+    if(!GetParent(Node)->black){                            /* Parent */
+        GetParent(Node)->black=1;
+        return;
+    }
+    
+    /* Propagate problem upwards */
+    if(this->isLeftChild(GetParent(Node))) DeleteFix(GetParent(Node), 1);/*Parent*/
+    else DeleteFix(GetParent(Node), 0);
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase3m(RBTMapNode<Comparable, T> *Node){
+    GetRightChild(GetLeftChild(GetParent(Node)))->black=1;  /* Right Nephew */
+    GetLeftChild(GetParent(Node))->black=0;                 /* Sibling */
+    LeftRotate(GetLeftChild(GetParent(Node)));              /* Sibling */
+    DeleteCase4m(Node);
+    
+}
+
+template<class Comparable, class T>
+void RBTreeMap<Comparable, T>::DeleteCase4m(RBTMapNode<Comparable, T> *Node){
+    GetLeftChild(GetParent(Node))->black=GetParent(Node)->black;/* Sibling, Parent */
+    GetParent(Node)->black=1;                                   /* Parent */
+    GetLeftChild(GetLeftChild(GetParent(Node)))->black=1;       /* Right Nephew */
+    RightRotate(GetParent(Node));                               /* Parent */
+}
+
 

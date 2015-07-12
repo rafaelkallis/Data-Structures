@@ -168,7 +168,7 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
     
     /* Node is Root */
     if(!Parent){
-        
+#warning take this idiotic stuff away
         /* Has 2 Children */
         if(LeftChild && RightChild){
             this->Root=RightChild;
@@ -244,8 +244,11 @@ void ABCtree<Comparable,NodeType>::Delete(Comparable *Key){
         /* Used to Prevent a Nasty Bug */
         if(Temp==RightChild){
             SetRightChild(toDelete, GetRightChild(Temp));
-            if(GetRightChild(Temp))
+            if(GetRightChild(Temp)){
                 SetParent(GetRightChild(Temp),GetParent(Temp));
+                //FIXME: Set TreeMap arguments as well!
+                DeleteFix(GetRightChild(Temp), 0);
+            }else if(toDelete->black)DeleteFix(new RBTNode<Comparable>(NULL,NULL,NULL,GetParent(Temp), 1), 0);
         }else{
             SetLeftChild(GetParent(Temp), GetRightChild(Temp));
             if(GetRightChild(Temp)){
@@ -531,7 +534,7 @@ void RBTree<Comparable>::InsertFix(RBTNode<Comparable> *Inserted, bool isInserte
         }else if(isInsertedLeftChild && this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
             InsertCase3(Inserted,Uncle);
 
-        /* Inserted: Left Child & Parent: Right Child & Uncle is Black > Case 3m */
+        /* Inserted: Right Child & Parent: Right Child & Uncle is Black > Case 3m */
         }else if(!isInsertedLeftChild && !this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
             InsertCase3m(Inserted,Uncle);
             
@@ -889,7 +892,7 @@ void RBTreeMap<Comparable, T>::InsertFix(RBTMapNode<Comparable, T> *Inserted, bo
         }else if(isInsertedLeftChild && this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
             InsertCase3(Inserted,Uncle);
             
-            /* Inserted: Left Child & Parent: Right Child & Uncle is Black > Case 3m */
+            /* Inserted: Right Child & Parent: Right Child & Uncle is Black > Case 3m */
         }else if(!isInsertedLeftChild && !this->isLeftChild(GetParent(Inserted)) && (!Uncle || Uncle->black)){
             InsertCase3m(Inserted,Uncle);
             

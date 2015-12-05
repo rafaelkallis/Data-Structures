@@ -1,5 +1,6 @@
 # Data Structure Library for C++
 
+This project is under development for educational purposes, I was quite a newbe to C/C++ at the time I wrote this code, so be ready face some potential bugs.
 These Structures have various algorithmic and database related appliances.
 
 ##### Structures Included:
